@@ -52,7 +52,6 @@ class DepthFirstSearch(object):
 				if new_dist < dist[tar]:
 					dist[tar] = new_dist
 					stack.append(tar)
-		print dist
 		return dist
 
 	# :type times: List[List[int]]
@@ -62,8 +61,6 @@ class DepthFirstSearch(object):
 	def networkDelayTime(self, times, N, K):
 		# turn times to the adjacency list
 		adj_list = self.GetAdjacencyList(times, N)
-		print adj_list
-		print adj_list.values()
 		# find out the minimax network delay time
 		dist = self.DijstraAlgo(adj_list, K)
 		max_len = 0
