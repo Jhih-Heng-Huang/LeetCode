@@ -1,5 +1,5 @@
 Main: Main.java
-	javac $^
+	javac -d ./ $^
 	java $@
 
 .PHONY: clean
