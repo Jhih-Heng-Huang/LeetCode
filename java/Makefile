@@ -1,5 +1,5 @@
 Main: Main.java
-	javac -d ./ $^
+	javac -d ./ $^ -Xlint
 	java $@
 
 .PHONY: clean
