@@ -785,83 +785,83 @@ public:
 class GridMap
 {
 public:
-    void InitialMap(int row_num, int col_num, int pos_x, int pos_y,
-            vector<vector<long int>>& map) {
-        map.assign(row_num, vector<long int>());
-        for (auto& list: map) {
-            list.assign(col_num, 0);
-        }
-        map[pos_x][pos_y] = 1;
-    }
-    void CalculateNumPaths(int path_len,
-            vector<vector<long int>>& map) {
-        vector<vector<long int>> current = map;
-        vector<vector<long int>> next = current;
-        for (unsigned int len = 1; len <= path_len; ++len) {
-            for (int row = 0; row < next.size(); ++row) {
-                for (int col = 0; col < next[row].size(); ++col) {
-                    long int sum = 0;
-                    if (row - 1 >= 0) {
-                        sum += current[row-1][col];
-                        sum %= mod;
-                    }
-                    if (row + 1 < next.size()) {
-                        sum += current[row+1][col];
-                        sum %= mod;
-                    }
-                    if (col - 1 >= 0) {
-                        sum += current[row][col-1];
-                        sum %= mod;
-                    }
-                    if (col + 1 < next[row].size()) {
-                        sum += current[row][col+1];
-                        sum %= mod;
-                    }
-                    next[row][col] = sum;
-                    map[row][col] += sum;
-                    map[row][col] %= mod;
-                }
-            }
-            current = next;
-        }
-    }
     int findPaths(int m, int n, int N, int i, int j) {
         if (N == 0) {
             return 0;
         }
-        // Get the initial table
-        mod = 1000000000 + 7;
-        vector<vector<long int>> map;
-        InitialMap(m, n, i, j, map);
-        // Calculate the number of paths
-        CalculateNumPaths(N-1, map);
-        // Show the context of the table
-        for (const auto& list: map) {
-            for (const auto& num: list) {
-                std::cout << '\t' << num;
-            }
-            std::cout << std::endl;
-        }
+        // gen a num table for recording the number of ways go to the grid
+        // for each step
+        vector<vector<long long>> num_table(m, vector<long long>(n, 0));
+        num_table[i][j] = 1;
+        vector<vector<long long>> sum_table = num_table;
 
-        long int num_path = 0;
-        for (auto num: map.front()) {
-            num_path += num;
-            num_path %= mod;
+        // compute the num table from 1 step to N-1 step
+        mod = 1000000000 + 7;
+        for (int step = 1; step < N; ++step) {
+            ComputeNumTable(num_table);
+            ComputeSumTable(sum_table, num_table);
         }
-        for (auto num: map.back()) {
-            num_path += num;
-            num_path %= mod;
+        // summing the number of ways to go out of the boundary
+        long long sum_ways = 0;
+        // top boundary
+        for (const auto& num: sum_table.front()) {
+            sum_ways += num;
+            sum_ways %= mod;
         }
-        for (const auto& list: map) {
-            num_path += list.front();
-            num_path %= mod;
-            num_path += list.back();
-            num_path %= mod;
+        // bottom boundary
+        for (const auto& num: sum_table.back()) {
+            sum_ways += num;
+            sum_ways %= mod;
         }
-        return (int)num_path;
+        // left & right boundary
+        for (const auto& list: sum_table) {
+            sum_ways += list.front();
+            sum_ways %= mod;
+            sum_ways += list.back();
+            sum_ways %= mod;
+        }
+        return sum_ways;
     }
 private:
-    long int mod;
+    long long mod;
+    void ComputeNumTable(vector<vector<long long>>& table) {
+        vector<vector<long long>> temp(table.size(),
+            vector<long long>(table[0].size(), 0));
+        for (int row = 0; row < table.size(); ++row) {
+            for (int col = 0; col < table[row].size(); ++col) {
+                // up
+                if (row - 1 >= 0) {
+                    temp[row][col] += table[row - 1][col];
+                    temp[row][col] %= mod;
+                }
+                // down
+                if (row + 1 < table.size()) {
+                    temp[row][col] += table[row + 1][col];
+                    temp[row][col] %= mod;
+                }
+                // left
+                if (col - 1 >= 0) {
+                    temp[row][col] += table[row][col - 1];
+                    temp[row][col] %= mod;
+                }
+                // right
+                if (col + 1 < table[row].size()) {
+                    temp[row][col] += table[row][col + 1];
+                    temp[row][col] %= mod;
+                }
+            }
+        }
+        table = temp;
+    }
+    void ComputeSumTable(vector<vector<long long>>& sum,
+            const vector<vector<long long>>& table) {
+        for (int row = 0; row < table.size(); ++row) {
+            for (int col = 0; col < table[row].size(); ++col) {
+                sum[row][col] += table[row][col];
+                sum[row][col] %= mod;
+            }
+        }
+    }
 };
 
 #endif
