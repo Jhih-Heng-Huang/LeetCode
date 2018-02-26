@@ -661,25 +661,28 @@ struct UndirectedGraphNode {
 class Graph
 {
 public:
-    UndirectedGraphNode *cloneGraph(UndirectedGraphNode *node) {
+    UndirectedGraphNode *cloneGraph(const UndirectedGraphNode *node) {
         if (node == NULL) {
             return NULL;
         }
 
-        // return the node which has been visited and cloned
         if (visited_nodes.find(node->label) != visited_nodes.end()) {
+            // return the node from the list if the node has been visited
             return visited_nodes[node->label];
         } else {
-            UndirectedGraphNode* clone_node = new UndirectedGraphNode(node->label);
-            visited_nodes[clone_node->label] = clone_node;
-            // visited all neighbors of this visited node
-            for (auto& neighbor: node->neighbors) {
-                clone_node->neighbors.push_back(cloneGraph(neighbor));
+            // Or clone the unvisited node & push it into the visited list
+            UndirectedGraphNode *new_node
+                = new UndirectedGraphNode(node->label);
+            visited_nodes[node->label] = new_node;
+            for (const auto& neighbor: node->neighbors) {
+                new_node->neighbors.push_back(cloneGraph(neighbor));
             }
-            return clone_node;
+            return new_node;
         }
     }
-
+private:
+    std::map<int, UndirectedGraphNode*> visited_nodes;
+public:
     void GetAdjacencyList(const int n,
             const vector<pair<int,int>>& edges,
             std::map<int, std::set<int>>& adj_list) {
@@ -773,8 +776,6 @@ public:
         }
         return max_dist;
     }
-private:
-    std::map<int, UndirectedGraphNode*> visited_nodes;
 };
 
 
