@@ -133,23 +133,26 @@ int minDepth(TreeNode* root){
 }
 
 
-int maxProduct(vector<int>& nums){
-    int maxProd=nums[0];
-    int minProd=nums[0];
-    int result=nums[0];
+int maxProduct(const vector<int>& nums){
+    vector<int> max = nums;
+    vector<int> min = nums;
+    int res = nums[0];
 
-    for(int i=1; i<nums.size(); ++i){
-        int newMax, newMin;
-        newMax=std::max(nums[i]*maxProd,nums[i]);
-        newMax=std::max(nums[i]*minProd,newMax);
-        newMin=std::min(nums[i]*minProd,nums[i]);
-        newMin=std::min(nums[i]*maxProd,newMin);
-
-        maxProd=newMax;
-        minProd=newMin;
-        result=std::max(maxProd,result);
+    for (unsigned int i = 1; i < nums.size(); ++i) {
+        if (nums[i] >= 0) {
+            max[i] = (max[i-1]*nums[i] > nums[i])?
+                max[i-1]*nums[i]:nums[i];
+            min[i] = (min[i-1]*nums[i] < nums[i])?
+                min[i-1]*nums[i]:nums[i];
+        } else {
+            max[i] = (min[i-1]*nums[i] > nums[i])?
+                min[i-1]*nums[i]:nums[i];
+            min[i] = (max[i-1]*nums[i] < nums[i])?
+                max[i-1]*nums[i]:nums[i];
+        }
+        res = (max[i] > res)? max[i]:res;
     }
-    return result;
+    return res;
 }
 
 int maxSubArray(std::vector<int>& nums){
