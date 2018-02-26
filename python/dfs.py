@@ -70,4 +70,3 @@ class DepthFirstSearch(object):
 			elif length > max_len:
 				max_len = length
 		return max_len
-
