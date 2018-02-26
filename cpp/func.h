@@ -626,28 +626,31 @@ public:
 class Tree
 {
 public:
-    int sumNumbers(TreeNode* root) {
+    int sumNumbers(const TreeNode* root) {
         if (root == NULL) {
             return 0;
         }
-        return SumNumbers(root, root->val);
+        return sumNumbers(root, root->val);
     }
 private:
-    int SumNumbers(TreeNode* root, int val) {
+    int sumNumbers(const TreeNode* root, int val) {
+        // return val if the root is a leaf of tree
         if (root->left == NULL && root->right == NULL) {
             return val;
         }
-
-        int left_sum = 0;
+        // get the val of left subtree
+        int sum_val = 0;
         if (root->left != NULL) {
-            left_sum = SumNumbers(root->left, val*10 + root->left->val);
-        }
-        int right_sum = 0;
-        if (root->right != NULL) {
-            right_sum = SumNumbers(root->right, val*10 + root->right->val);
+            int left_val = val * 10 + root->left->val;
+            sum_val += sumNumbers(root->left, left_val);
         }
 
-        return left_sum + right_sum;
+        // get the val of right subtree
+        if (root->right != NULL) {
+            int right_val = val * 10 + root->right->val;
+            sum_val += sumNumbers(root->right, right_val);
+        }
+        return sum_val;
     }
 };
 
