@@ -868,3 +868,107 @@ private:
 };
 
 #endif
+
+struct tree {
+    int x;
+    tree * l;
+    tree * r;
+};
+struct Point3D {
+    int x;
+    int y;
+    int z;
+};
+class Rayark {
+public:
+    // task 1
+    int solution(vector<Point3D> &A) {
+        // write your code in C++14 (g++ 6.2.0)
+        std::set<long long> r_set;
+        for (const auto& point: A) {
+            long long val = point.x * point.x +
+                point.y * point.y +
+                point.z * point.z;
+            r_set.insert(val);
+        }
+        return r_set.size();
+    }
+
+    int MaxDistinctVal(const tree* root, std::map<int, int>& set_val) {
+        if (root->l == NULL && root->r == NULL) {
+            return set_val.size();
+        }
+        int max = -1;
+        if (root->l != NULL) {
+            if (set_val.find(root->l->x) == set_val.end()) {
+                set_val[root->l->x] = 1;
+            } else {
+                ++set_val[root->l->x];
+            }
+            int left_max = MaxDistinctVal(root->l,set_val);
+            --set_val[root->l->x];
+            if (set_val[root->l->x] == 0) {
+                set_val.erase(root->l->x);
+            }
+
+            max = (left_max > max)? left_max:max;
+        }
+        if (root->r != NULL) {
+            if (set_val.find(root->r->x) == set_val.end()) {
+                set_val[root->r->x] = 1;
+            } else {
+                ++set_val[root->r->x];
+            }
+            int right_max = MaxDistinctVal(root->r, set_val);
+            --set_val[root->r->x];
+            if (set_val[root->r->x] == 0) {
+                set_val.erase(root->r->x);
+            }
+
+            max = (right_max > max)? right_max:max;
+        }
+        return max;
+    }
+    // task 2
+    int solution(tree * root) {
+        if (root == NULL) {
+            return 0;
+        } else {
+            std::map<int, int> set_val;
+            set_val[root->x] = 1;
+            return MaxDistinctVal(root, set_val);
+        }
+    }
+    // task 3
+    int solution(int A) {
+        if ((A/10) == 0) {
+            return A;
+        }
+        // get the digit length of A
+        int len = 0;
+        long long temp = A;
+        for (; temp != 0; ++len) {
+            temp /= 10;
+        }
+        std::cout << len << std::endl;
+        // create the new digit from A
+        long long front = 1;
+        for (int i = 1; i < len; ++i) {
+            front *= 10;
+        }
+        long long new_digit = 0;
+        temp = A;
+        while (front >= 1) {
+            // get the front and the back of digit of A
+            new_digit = new_digit * 10 + (temp/front);
+            if (front != 1) {
+                new_digit = new_digit * 10 + (temp%10);
+            }
+            // remove the front and the back digit of A
+            temp%=front;
+            temp/=10;
+            front/=100;
+        }
+        return new_digit;
+    }
+};
