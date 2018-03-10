@@ -2,6 +2,7 @@
 #include <cstdio>
 #include <cstdlib>
 #include "func.h"
+#include "lib/dynamic_programming.h"
 
 
 template<class T>
