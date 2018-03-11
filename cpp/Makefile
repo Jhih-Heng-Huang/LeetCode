@@ -1,6 +1,7 @@
-OBJ= obj/dynamic_programming.o
+OBJ=obj/dynamic_programming.o
+EXE=main
 
-mainCPP: main.cpp func.h $(OBJ)
+$(EXE): main.cpp func.h $(OBJ)
 	g++ -o $@ -std=c++11 $^
 
 obj/%.o: lib/%.cpp lib/%.h
@@ -8,4 +9,4 @@ obj/%.o: lib/%.cpp lib/%.h
 
 .PHONY: clean
 clean:
-	rm -r mainCPP $(OBJ) lib/*.gch
+	rm -r $(EXE) $(OBJ)
