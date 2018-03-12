@@ -14,6 +14,11 @@ public:
 	int countSubstrings(string s);
 private:
 	bool isPalindromic(const string& s, const int front, const int back);
+
+public:
+	int findLongestChain(vector<vector<int>>& pairs);
+private:
+	void sort(vector<vector<int>>& pairs);
 };
 
 #endif

@@ -1,4 +1,7 @@
 #include "dynamic_programming.h"
+#include <algorithm>
+
+enum Pair {front, back};
 
 vector<int> DynamicProgramming::countBits(const int num) {
 	vector<int> list(1, 0);
@@ -34,4 +37,37 @@ bool DynamicProgramming::isPalindromic(const string& s,
 		}
 	}
 	return true;
+}
+
+int DynamicProgramming::findLongestChain(vector<vector<int>>& pairs) {
+	if (pairs.size() <= 1) {
+		return pairs.size();
+	}
+	// sort pairs
+	this->sort(pairs);
+	// find each longest chain for each element as
+	// the end of chain
+	int max_len = 1;
+	vector<int> len_chains(pairs.size(), 1);
+	for (int i = 0; i < pairs.size(); ++i) {
+		for (int prev = i - 1; prev >= 0; --prev) {
+			if (pairs[i][front] > pairs[prev][back]) {
+				len_chains[i] += len_chains[prev];
+				max_len = std::max(len_chains[i], max_len);
+				break;
+			}
+		}
+	}
+	return max_len;
+}
+
+void DynamicProgramming::sort(vector<vector<int>>& pairs) {
+	// bubble sort
+	for (int i = 0; i < pairs.size(); ++i) {
+		for (int j = 1; j < pairs.size(); ++j) {
+			if (pairs[j][front] < pairs[j-1][front]) {
+				std::swap(pairs[j], pairs[j - 1]);
+			}
+		}
+	}
 }
