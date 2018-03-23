@@ -71,3 +71,18 @@ void DynamicProgramming::sort(vector<vector<int>>& pairs) {
 		}
 	}
 }
+
+// 746. Min Cost Climbing Stairs
+int DynamicProgramming::minCostClimbingStairs(const vector<int>& cost) {
+	vector<int> min_cost;
+	min_cost.push_back(cost[0]);
+	min_cost.push_back(cost[1]);
+
+	for (unsigned int i = 2; i < cost.size(); ++i) {
+		int min = cost[i] + 
+			((min_cost[i-1] < min_cost[i-2])? min_cost[i-1] : min_cost[i-2]);
+		min_cost.push_back(min);
+	}
+	const int n = min_cost.size();
+	return (min_cost[n-1] < min_cost[n-2])? min_cost[n-1] : min_cost[n-2];
+}

@@ -19,6 +19,10 @@ public:
 	int findLongestChain(vector<vector<int>>& pairs);
 private:
 	void sort(vector<vector<int>>& pairs);
+
+// 746. Min Cost Climbing Stairs
+public:
+	int minCostClimbingStairs(const vector<int>& cost);
 };
 
 #endif
