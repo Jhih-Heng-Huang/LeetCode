@@ -3,6 +3,7 @@
 #include <cstdlib>
 #include "func.h"
 #include "lib/dynamic_programming.h"
+#include "lib/depth_first_search.h"
 
 int main(){
     DynamicProgramming dp;

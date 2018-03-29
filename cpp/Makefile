@@ -1,4 +1,4 @@
-OBJ=obj/dynamic_programming.o
+OBJ=obj/dynamic_programming.o obj/depth_first_search.o
 EXE=main
 
 $(EXE): main.cpp func.h $(OBJ)
