@@ -25,6 +25,17 @@ struct TreeNode {
     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
 };
 
+// 461. Hamming Distance
+int hammingDistance(int x, int y) {
+    int num = x ^ y;
+    int count = 0;
+    while (num != 0) {
+        count += (num%2);
+        num/=2;
+    }
+    return count;
+}
+
 bool isSameTree(TreeNode* s, TreeNode* t){
     if(s==NULL && t==NULL)
         return true;
