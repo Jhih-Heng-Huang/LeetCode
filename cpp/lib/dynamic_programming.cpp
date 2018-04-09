@@ -3,13 +3,12 @@
 
 enum Pair {front, back};
 
+// 338. Counting Bits
 vector<int> DynamicProgramming::countBits(const int num) {
-	vector<int> list(1, 0);
-	if (num == 0) {
-		return list;
-	}
+	vector<int> list(1,0);
 	for (int i = 1; i <= num; ++i) {
-		list.push_back(list[i/2] + i%2);
+		int count = i%2 + list[i/2];
+		list.push_back(count);
 	}
 	return list;
 }

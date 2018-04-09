@@ -10,7 +10,9 @@ using std::string;
 class DynamicProgramming {
 public:
 	DynamicProgramming() {}
+	// 338. Counting Bits
 	vector<int> countBits(const int num);
+	
 	int countSubstrings(string s);
 private:
 	bool isPalindromic(const string& s, const int front, const int back);
