@@ -10,9 +10,11 @@ using std::string;
 class DynamicProgramming {
 public:
 	DynamicProgramming() {}
+	// 191. Number of 1 Bits
+	int hammingWeight(uint32_t n);
 	// 338. Counting Bits
 	vector<int> countBits(const int num);
-	
+
 	int countSubstrings(string s);
 private:
 	bool isPalindromic(const string& s, const int front, const int back);

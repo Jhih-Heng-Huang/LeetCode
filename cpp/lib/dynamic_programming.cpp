@@ -3,6 +3,14 @@
 
 enum Pair {front, back};
 
+// 191. Number of 1 Bits
+int DynamicProgramming::hammingWeight(uint32_t n) {
+	if (n == 0) {
+		return 0;
+	}
+	return n%2 + this->hammingWeight(n/2);
+}
+
 // 338. Counting Bits
 vector<int> DynamicProgramming::countBits(const int num) {
 	vector<int> list(1,0);
