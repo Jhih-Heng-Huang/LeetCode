@@ -36,6 +36,35 @@ int hammingDistance(int x, int y) {
     return count;
 }
 
+// 477. Total Hamming Distance
+int totalHammingDistance(vector<int>& nums) {
+    if (nums.size() == 0) {
+        return 0;
+    }
+    // find out the index of max number in the list
+    int max_i = 0;
+    for (int i = 0; i < nums.size(); ++i) {
+        if (nums[i] > nums[max_i]) {
+            max_i = i;
+        }
+    }
+    // compute total hamming distance until
+    // the max number equal to 0
+    int dist = 0;
+    while (nums[max_i] != 0) {
+        // compute the total hamming distance of
+        // all least significant bits
+        int count_0 = 0;
+        int count_1 = 0;
+        for (auto &num: nums) {
+            (num % 2 == 0)? ++count_0 : ++count_1;
+            num /= 2;
+        }
+        dist += (count_0 * count_1);
+    }
+    return dist;
+}
+
 bool isSameTree(TreeNode* s, TreeNode* t){
     if(s==NULL && t==NULL)
         return true;
