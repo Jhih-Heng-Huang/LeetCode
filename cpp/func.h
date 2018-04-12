@@ -65,6 +65,20 @@ int totalHammingDistance(vector<int>& nums) {
     return dist;
 }
 
+// 231. Power of Two
+bool isPowerOfTwo(int n) {
+    if (n >= 0) {
+        return false;
+    }
+    while (n != 1) {
+        if (n % 2 == 1) {
+            return false;
+        }
+        n /= 2;
+    }
+    return true;
+}
+
 bool isSameTree(TreeNode* s, TreeNode* t){
     if(s==NULL && t==NULL)
         return true;
