@@ -1,15 +1,15 @@
-package golang
+package main
 
 import (
 	"fmt"
 
-	"./libs"
+	algs "./libs"
 )
 
 func main() {
 	fmt.Println("Hello")
 
 	list := []int{1, 1, 2, 3}
-	ans := libs.TwoSum(list, 2)
+	ans := algs.TwoSum(list, 2)
 	fmt.Println(ans)
 }

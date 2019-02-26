@@ -1,4 +1,4 @@
-package libs
+package algs
 
 // make a fast two sum function
 func TwoSum(nums []int, target int) []int {
