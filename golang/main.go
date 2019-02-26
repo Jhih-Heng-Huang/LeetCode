@@ -1,25 +1,15 @@
-package main
+package golang
 
-import "fmt"
+import (
+	"fmt"
 
-// make a fast two sum function
-func TwoSum(nums []int, target int) []int {
-	// store nums[i] in map for checking if the value of nums[i] is equal to target - nums[j]
-	m := make(map[int]int)
+	"./libs"
+)
 
-	for i := 0; i < len(nums); i++ {
-		diffValue := target - nums[i]
-		switch index, existed := m[diffValue]; existed {
-		case true:
-			return []int{index, i}
-		default:
-			m[nums[i]] = i
-		}
-	}
-
-	return []int{}
-}
-
-func main()  {
+func main() {
 	fmt.Println("Hello")
+
+	list := []int{1, 1, 2, 3}
+	ans := libs.TwoSum(list, 2)
+	fmt.Println(ans)
 }
