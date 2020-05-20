@@ -1,11 +1,9 @@
-import LeetCode.UnitTest.RunUnitTest
 
-fun main(args: Array<String>) {
-    foo()
-    RunUnitTest()
-}
+import LeetCode.UnitTest.testMaximumDepthBinaryTree
+import LeetCode.DepthFirstSeach.MaximumDepthBinaryTree.*
 
 
-fun foo(): Unit {
-    println("Hello Kotlin!")
+fun main(args: Array<String>)
+{
+    testMaximumDepthBinaryTree()
 }

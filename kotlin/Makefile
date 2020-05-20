@@ -1,7 +1,7 @@
 KOTLIN=kotlinc
 JAVA=java
 MAIN=main
-LIBS=Lib/UnitTest.kt
+LIBS=Lib/*.kt
 
 $(MAIN):
 	$(KOTLIN) -include-runtime -d $(MAIN).jar $(MAIN).kt $(LIBS)
