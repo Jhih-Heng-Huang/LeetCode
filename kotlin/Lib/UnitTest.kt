@@ -1,6 +1,6 @@
 package LeetCode.UnitTest
 
-import LeetCode.DepthFirstSeach.MaximumDepthBinaryTree.maxDepth
+import LeetCode.MaximumDepthBinaryTree.*
 import LeetCode.TreeNode
 import LeetCode.showDetail
 
@@ -16,15 +16,15 @@ fun testMaximumDepthBinaryTree(): Boolean
     root?.right?.left = TreeNode(4)
     
     val lazyMsg: () -> String = {"Case ${root?.showDetail()} is failed"}
-    assert(maxDepth(root) == 3, lazyMsg)
+    assert(maxDepthByBFS(root) == 3, lazyMsg)
 
     root?.left = null
-    assert(maxDepth(root) == 3, lazyMsg)
+    assert(maxDepthByBFS(root) == 3, lazyMsg)
 
     root?.right?.left = null
-    assert(maxDepth(root) == 2, lazyMsg)
+    assert(maxDepthByBFS(root) == 2, lazyMsg)
     
     root = null
-    assert(maxDepth(root) == 0, lazyMsg)
-    return true;
+    assert(maxDepthByBFS(root) == 0, lazyMsg)
+    return true
 }
