@@ -10,7 +10,6 @@ namespace LeetCode
         static void Main(string[] args)
         {
             Console.WriteLine("Hello C#.");
-            Console.WriteLine("Test value: " + TestClass.Test());
             
             Console.WriteLine("Edit Distance Algorithms Test`s Result is: " + TestEditDistanceAlgorithm());
         }
