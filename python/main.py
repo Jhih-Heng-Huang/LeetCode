@@ -1,6 +1,5 @@
 from dfs import DepthFirstSearch as dfs
 from bfs import BreadthFirstSearch as bfs
-from tree import TreeNode
 
 if __name__ == '__main__':
 	sol = bfs()

@@ -1,5 +1,5 @@
 main: main.py
-	python main.py
+	python3 main.py
 
 .PHONY: clean
 clean:
