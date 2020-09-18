@@ -1,6 +1,6 @@
 main: main.py
-	python3 main.py
+	python3 *.py
 
 .PHONY: clean
 clean:
-	rm *.pyc
+	rm -r __pycache__/
