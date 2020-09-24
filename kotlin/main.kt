@@ -1,6 +1,6 @@
 import LeetCode.UnitTest.testMaximumDepthBinaryTree
 
-fun main(args: Array<String>)
+fun main()
 {
     testMaximumDepthBinaryTree()
 }

@@ -18,7 +18,10 @@ fun invertTree(root: TreeNode?): TreeNode?
     val rightSubTree = invertTree(root.left)
 
     var result: TreeNode? = TreeNode(root.`val`)
-    result!!.left = leftSubTree
-    result!!.right = rightSubTree
+    if (result != null) 
+    {
+        result.left = leftSubTree
+        result.right = rightSubTree
+    }
     return result
 }

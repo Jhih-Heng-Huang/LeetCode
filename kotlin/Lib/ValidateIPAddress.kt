@@ -1,4 +1,4 @@
-package LeetCode.Validate IP Address
+package LeetCode.ValidateIPAddress
 
 /*
 Validate IP Address
