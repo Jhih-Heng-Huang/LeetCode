@@ -1,4 +1,4 @@
-main: main.py
+main:
 	python3 *.py
 
 .PHONY: clean
