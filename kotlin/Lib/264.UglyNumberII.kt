@@ -1,8 +1,8 @@
 // 264. Ugly Number II
 
-private data class PrimePointer(val `val`: Int, var pos: Int)
 
 class LeetCode264UglyNumberII {
+    private data class PrimePointer(val `val`: Int, var pos: Int)
     fun nthUglyNumber(n: Int): Int {
         if (n == 1) return 1
 
