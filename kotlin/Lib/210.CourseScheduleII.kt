@@ -4,12 +4,13 @@ private enum class State {
     NonVisited, Visiting, Visited
 }
 
-private data class Node(
-    var state: State,
-    var hasCycle: Boolean,
-     val nexts: MutableList<Int>)
 
 class LeetCode210CourseScheduleII {
+    private data class Node(
+        var state: State,
+        var hasCycle: Boolean,
+        val nexts: MutableList<Int>)
+
     fun findOrder(numCourses: Int, prerequisites: Array<IntArray>): IntArray {
         if (numCourses == 0 || !`_IsValid`(numCourses, prerequisites))
             return IntArray(0)
