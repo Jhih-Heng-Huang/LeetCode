@@ -4,23 +4,14 @@
 
 int LeetCode518CoinChange2::change(int amount, vector<int>& coins) {
     if (amount == 0) return 1;
+    if (coins.size() == 0) return 0;
     
-    auto& table = GenTable_(amount);
+    vector<int> table(amount+1, 0);
+    table[0] = 1;
 
     for (auto coin: coins)
         for (int i = coin; i < table.size(); ++i)
             table[i] += table[i-coin];
 
-    auto result = table[amount];
-    delete &table;
-    return result;
-}
-
-vector<int>& LeetCode518CoinChange2::GenTable_(int amount) {
-    auto table = new vector<int>(amount + 1);
-    for (auto& e: *table) {
-        e = 0;
-    }
-    (*table)[0] = 1;
-    return *table;
+    return table[amount];
 }
