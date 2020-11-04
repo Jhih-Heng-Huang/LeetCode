@@ -32,7 +32,8 @@ public class ContiguousArray {
 		var diff = 0;
 		for (int i = 0; i < nums.Length; ++i) {
 			diff += (nums[i] == 0)? 1 : -1;
-			if (dic.TryGetIndex(diff, out var preIndex))
+			int preIndex = 0;
+			if (dic.TryGetIndex(diff, out preIndex))
 				maxLen = Math.Max(maxLen, i - preIndex);
 			else
 				dic.Set(diff, i);
