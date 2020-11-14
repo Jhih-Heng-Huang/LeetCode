@@ -7,70 +7,79 @@ using System.Collections.Generic;
 using System.Linq;
 
 public class CriticalConnectionsInANetwork {
-	private class Node {
-		public int Rank = -2;
-		public List<int> Nexts = new List<int>();
-	}
-
-    public IList<IList<int>> CriticalConnections(
-        int n, IList<IList<int>> connections) {
-		
-		var list = new List<IList<int>>();
-		
-		if (n == 0 || connections == null || connections.Count == 0)
-			return list;
-
-		var nodes = _GenNodes(n, connections);
-
-		for (int i = 0; i < nodes.Length; ++i)
-			if (nodes[i].Rank == -2)
-				_FindMinRank(i, 0, nodes, list);
-		return list;
+    private class Node
+    {
+        public int Rank = -2;
+        public List<int> Nexts = new List<int>();
     }
 
-	private int _FindMinRank(int i, int rank,
-		Node[] nodes, List<IList<int>> list)
-	{
-		if (nodes[i].Rank != -2)
-			return nodes[i].Rank;
+    public IList<IList<int>> CriticalConnections(
+        int n, IList<IList<int>> connections)
+    {
+        var list = new List<IList<int>>();
+        if (n == 0 || connections == null || connections.Count == 0)
+            return list;
 
-		nodes[i].Rank = rank;
-		var n = nodes.Length;
-		var minRank = rank;
+        var nodes = _GenGraph(n, connections);
 
-		foreach (var next in nodes[i].Nexts) {
-			if (nodes[next].Rank == n ||
-				nodes[next].Rank == rank-1)
-				continue;
-			
-			var newRank = _FindMinRank(next, rank+1, nodes, list);
+        for (int i = 0; i < nodes.Length; ++i)
+        {
+            if (nodes[i].Rank == -2)
+                _Traverse(i, 0, nodes, list);
+        }
 
-			if (newRank <= rank)
-				minRank = Math.Min(minRank, newRank);
-			else {
-				var edge = new int[] {i, next}.ToList();
-				list.Add(edge);
-			}
-		}
+        return list;
+    }
 
-		nodes[i].Rank = n;
+    private Node[] _GenGraph(int num, IList<IList<int>> edges)
+    {
+        var nodes = new Node[num];
 
-		return minRank;
-	}
+        for (int i = 0; i < nodes.Length; ++i)
+            nodes[i] = new Node();
 
-	private Node[] _GenNodes(int n, IList<IList<int>> connections) {
-		var nodes = new Node[n];
+        foreach (var edge in edges)
+        {
+            var i = edge[0];
+            var j = edge[1];
+            nodes[i].Nexts.Add(j);
+            nodes[j].Nexts.Add(i);
+        }
 
-		for (int i = 0; i < nodes.Length; ++i)
-			nodes[i] = new Node();
+        return nodes;
+    }
 
-		foreach (var edge in connections) {
-			var i = edge[0];
-			var j = edge[1];
-			nodes[i].Nexts.Add(j);
-			nodes[j].Nexts.Add(i);
-		}
+    private bool _IsVisited(Node node)
+    {
+        return node.Rank >= 0;
+    }
 
-		return nodes;
-	}
+
+    private int _Traverse(int i, int rank, Node[] nodes, IList<IList<int>> criticalEdges)
+    {
+        if (nodes[i].Rank != -2) return nodes[i].Rank;
+
+        var num = nodes.Length;
+        nodes[i].Rank = rank;
+        var minRank = rank;
+
+        foreach (var next in nodes[i].Nexts)
+        {
+            var nextRank = nodes[next].Rank;
+            if (nextRank == rank - 1 || nextRank == num)
+                continue;
+
+            nextRank = _Traverse(next, rank + 1, nodes, criticalEdges);
+            if (rank >= nextRank)
+                minRank = Math.Min(minRank, nextRank);
+            else
+            {
+                var edge = new int[] { i, next }.ToList();
+                criticalEdges.Add(edge);
+            }
+        }
+
+        nodes[i].Rank = num;
+        return minRank;
+    }
 }
