@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\works\\csharp\\csharp\\csharp.csproj": {}
+    "D:\\works\\LeetCode\\csharp\\csharp\\csharp.csproj": {}
   },
   "projects": {
-    "D:\\works\\csharp\\csharp\\csharp.csproj": {
+    "D:\\works\\LeetCode\\csharp\\csharp\\csharp.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\works\\csharp\\csharp\\csharp.csproj",
+        "projectUniqueName": "D:\\works\\LeetCode\\csharp\\csharp\\csharp.csproj",
         "projectName": "csharp",
-        "projectPath": "D:\\works\\csharp\\csharp\\csharp.csproj",
+        "projectPath": "D:\\works\\LeetCode\\csharp\\csharp\\csharp.csproj",
         "packagesPath": "C:\\Users\\albert\\.nuget\\packages\\",
-        "outputPath": "D:\\works\\csharp\\csharp\\obj\\",
+        "outputPath": "D:\\works\\LeetCode\\csharp\\csharp\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"

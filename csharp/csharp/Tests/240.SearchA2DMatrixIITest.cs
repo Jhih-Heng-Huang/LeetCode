@@ -23,11 +23,5 @@ namespace csharp.Tests
 
             Assert.AreEqual(result, expect);
         }
-
-        [Test]
-        public void Fail()
-        {
-            Assert.Fail();
-        }
     }
 }
