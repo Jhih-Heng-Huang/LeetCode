@@ -12,70 +12,93 @@ public class CourseScheduleII {
 		Visited,
 	}
 
-
-	private class Node {
-		public State State = State.NonVisit;
-		public bool HasCycle = false;
-		public List<int> Nexts = new List<int>();
+	private class Course {
+		public State VisitState = State.NonVisit;
+		public bool IsValid = false;
+		public List<int> Requires = new List<int>();
 	}
-
-    public int[] FindOrder(int numCourses,
-                           int[][] prerequisites)
-    {
-		if (numCourses == 0)
+	public int[] FindOrder(int numCourses,
+						   int[][] prerequisites)
+	{
+		if (numCourses <= 0)
 			return new int[]{};
 
-		var nodes = _GenNodes(numCourses, prerequisites);
-		return _FindOrder(nodes);
-    }
+		var courses = _GenCourses(numCourses, prerequisites);
+		var orders = new List<int>();
 
-	private Node[] _GenNodes(int n, int[][] edges) {
-		var nodes = new Node[n];
+		for (int i = 0; i < courses.Length; ++i) {
+			int[] subOrders = new int[]{};
 
-		for (int i = 0; i < nodes.Length; ++i)
-			nodes[i] = new Node();
+			if (_IsNonVisit(courses[i]) &&
+				!_TryRecordTravelOrders(i, courses, out subOrders))
+				return new int[]{};
+
+			orders.AddRange(subOrders);
+		}
+
+		return orders.ToArray();
+	}
+
+	private Course[] _GenCourses(in int num, in int[][] edges) {
+		var courses = new Course[num];
+
+		for (int i = 0; i < num; ++i) courses[i] = new Course();
 
 		foreach (var edge in edges) {
 			var i = edge[0];
 			var j = edge[1];
-			nodes[i].Nexts.Add(j);
+			courses[i].Requires.Add(j);
 		}
 
-		return nodes;
+		return courses;
 	}
 
-	private int[] _FindOrder(Node[] nodes) {
-		var list = new List<int>();
-
-		for (int i = 0; i < nodes.Length; ++i) {
-			if (_HasCycle(i, nodes, list))
-				return new int[]{};
-		}
-
-		return list.ToArray();
+	private bool _IsNonVisit(in Course course) {
+		return course.VisitState == State.NonVisit;
 	}
 
-	private bool _HasCycle(int i, Node[] nodes, List<int> list) {
+	private bool _IsVisited(in Course course) {
+		return course.VisitState == State.Visited;
+	}
 
-		if (nodes[i].State == State.Visited)
-			return nodes[i].HasCycle;
-		if (nodes[i].State == State.Visiting)
-			return true;
+	private bool _IsVisiting(in Course course) {
+		return course.VisitState == State.Visiting;
+	}
 
-		nodes[i].State = State.Visiting;
-
-		foreach (var next in nodes[i].Nexts) {
-			if (_HasCycle(next, nodes, list)) {
-				nodes[i].HasCycle = true;
-				return true;
-			}
+	private bool _TryRecordTravelOrders(
+		in int current,
+		Course[] courses,
+		out int[] orders)
+	{
+		if (_IsVisited(courses[current])) {
+			orders = null;
+			return courses[current].IsValid;
+		}
+		if (_IsVisiting(courses[current])) {
+			goto Fail;
 		}
 
-		nodes[i].State = State.Visited;
-		nodes[i].HasCycle = false;
-		list.Add(i);
+		var newOrders = new List<int>();
+		courses[current].VisitState = State.Visiting;
 
+		foreach (var require in courses[current].Requires) {
+			int[] subOrders = new int[]{};
+			if (!_TryRecordTravelOrders(require, courses, out subOrders))
+				goto Fail;
+
+			newOrders.AddRange(subOrders);
+		}
+		goto Success;
+	Fail:
+		courses[current].VisitState = State.Visited;
+		courses[current].IsValid = false;
+		orders = null;
 		return false;
-
+	Success:
+		courses[current].VisitState = State.Visited;
+		courses[current].IsValid = true;
+		newOrders.Add(current);
+		orders = newOrders.ToArray();
+		return true;
 	}
 }
