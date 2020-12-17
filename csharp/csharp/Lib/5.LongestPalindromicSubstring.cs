@@ -1,42 +1,41 @@
+// LeetCode: 5. Longest Palindromic Substring
+
 using System;
 
 public class LongestPalindromicSubstring {
     public string LongestPalindrome(string s) {
-		if (s == null || s.Length < 2)
-			return s;
-		
-		var maxStr = string.Empty;
+		if (s == null || s.Length < 2) return s;
 
-		for (int i = 0; i < s.Length; ++i) {
-			var str1 = _GetLongPalindrome(s, i, i);
-			if (maxStr.Length < str1.Length)
-				maxStr = str1;
+		var maxLength = int.MinValue;
+		var maxString = string.Empty;
+		for (int i = 1; i < s.Length; ++i) {
+			var str1 = _FindLongestPalindrome(s, i, i);
+			if (maxLength < str1.Length) {
+				maxLength = str1.Length;
+				maxString = str1;
+			}
 
-			var str2 = _GetLongPalindrome(s, i, i+1);
-			if (maxStr.Length < str2.Length)
-				maxStr = str2;
+			var str2 = _FindLongestPalindrome(s, i-1, i);
+			if (maxLength < str2.Length) {
+				maxLength = str2.Length;
+				maxString = str2;
+			}
 		}
 
-		return maxStr;
+		return maxString;
     }
 
-	private string _GetLongPalindrome(
-		string s, int left, int right)
-	{
-		if (left > right)
-			return string.Empty;
-		
-		while (left >= 0 && right < s.Length &&
-			   s[left] == s[right])
-		{
+	private string _FindLongestPalindrome(string s, int left, int right) {
+		if (left > right) return string.Empty;
+
+		while (left >= 0 && right < s.Length && s[left] == s[right]) {
 			--left;
 			++right;
 		}
 
 		++left;
 		--right;
-		var len = right - left + 1;
 
-		return s.Substring(left, len);
+		return s.Substring(left, right - left + 1);
 	}
 }
