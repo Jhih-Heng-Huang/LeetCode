@@ -5,41 +5,39 @@
 using System;
 
 public class CheapestFlightsWithinKStops {
-    public int FindCheapestPrice(int n, int[][] flights, int src, int dst, int K) {
-		if (n == 0)
-			return 0;
-		
-		var dp = _GenTable(n);
-		dp[src] = 0;
+	public int FindCheapestPrice(int n, int[][] flights, int src, int dst, int K) {
+		if (n == 0 || flights == null) return -1;
 
-		for (int i = 0; i < K+1; ++i)
-			_Update(ref dp, flights);
+		var oldTable = _GenTable(n, src);
+		var newTable = (int[]) oldTable.Clone();
 
-		return dp[dst] == int.MaxValue? -1 : dp[dst];
-    }
+		for (int i = 0; i < K+1; ++i) {
+			foreach (var flight in flights) {
+				var start = flight[0];
+				var end = flight[1];
+				var weight = flight[2];
 
-	private int[] _GenTable(int n) {
-		var list = new int[n];
-		
-		for (int i = 0; i < list.Length; ++i)
-			list[i] = int.MaxValue;
-		
-		return list;
+				if (oldTable[start] == int.MaxValue)
+					continue;
+				
+				newTable[end] = Math.Min(newTable[end], oldTable[start] + weight);
+			}
+
+			for (int j = 0; j < newTable.Length; ++j)
+				oldTable[j] = newTable[j];
+		}
+
+		return oldTable[dst] == int.MaxValue? -1 : oldTable[dst];
 	}
 
-	private void _Update(ref int[] dp, int[][] flights) {
-		var temp = (int[]) dp.Clone();
+	private int[] _GenTable(int n, int src) {
+		var list = new int[n];
 
-		foreach (var f in flights) {
-			var src = f[0];
-			var dst = f[1];
-			var price = f[2];
+		for (int i = 0; i < list.Length; ++i)
+			list[i] = int.MaxValue;
 
-			if (dp[src] == int.MaxValue)
-				continue;
-			
-			temp[dst] = Math.Min(temp[dst], dp[src] + price);
-		}
-		dp = temp;
+		list[src] = 0;
+
+		return list;
 	}
 }
