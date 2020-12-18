@@ -1,17 +1,20 @@
+// LeetCode: 146. LRU Cache
 using System.Collections.Generic;
 
 public class LRUCache {
+	#region Inner classes
 	private class Node {
 		public int Key;
 		public int Value;
-		public Node Pre = null;
-		public Node Post = null;
+		public Node Previous = null;
+		public Node Next = null;
 	}
+	#endregion
 
 	private int _capacity;
-	private Node _head;
-	private Node _tail;
-	private Dictionary<int, Node> _dic = new Dictionary<int, Node>();
+	private Dictionary<int, Node> _cache = new Dictionary<int, Node>();
+	private Node _head = null;
+	private Node _tail = null;
 
 	public LRUCache(int capacity) {
 		_capacity = capacity;
@@ -19,76 +22,79 @@ public class LRUCache {
 		_head = new Node();
 		_tail = new Node();
 
-		_head.Post = _tail;
-		_tail.Pre = _head;
+		_head.Next = _tail;
+		_tail.Previous = _head;
 	}
 
 	public int Get(int key) {
-		if (!_dic.ContainsKey(key))
-			return -1;
-		
-		var node = _dic[key];
-		_MoveBack(node);
+		if (!_cache.ContainsKey(key)) return -1;
+
+		var node = _cache[key];
+		_Extract(node);
+		_PushBack(node);
+
 		return node.Value;
 	}
 	
 	public void Put(int key, int value) {
-		Node node = null;
-		if (_dic.ContainsKey(key)) {
-			node = _dic[key];
+		if (_cache.ContainsKey(key)) {
+			
+			var node = _cache[key];
 			node.Value = value;
-			_MoveBack(node);
-			return;
+			_Extract(node);
+			_PushBack(node);
+
+		} else {
+
+			var node = new Node();
+
+			node.Key = key;
+			node.Value = value;
+
+			_cache.Add(key, node);
+			_PushBack(node);
+
+			if (_cache.Count <= _capacity) return;
+
+			Node popNode = null;
+			if (!_TryPopHead(out popNode)) return;
+
+			_cache.Remove(popNode.Key);
 		}
-
-		node = new Node();
-		node.Key = key;
-		node.Value = value;
-
-		_PushBack(node);
-		_dic[key] = node;
-
-		if (_dic.Count <= _capacity)
-			return;
-		
-		var head = _PopHead();
-		_dic.Remove(head.Key);
 	}
 
-	private void _MoveBack(Node node) {
-		if (node == null)
-			return;
+	private void _Extract(Node node) {
+		var previousNode = node.Previous;
+		var nextNode = node.Next;
 
-		if (node.Pre != null && node.Post != null) {
-			node.Pre.Post = node.Post;
-			node.Post.Pre = node.Pre;
-		}
+		node.Previous = null;
+		node.Next = null;
 
-		_PushBack(node);
+		previousNode.Next = nextNode;
+		nextNode.Previous = previousNode;
 	}
+
 	private void _PushBack(Node node) {
-		if (node == null)
-			return;
+		var previous = _tail.Previous;
+		var next = _tail;
 
-		node.Pre = _tail.Pre;
-		node.Post = _tail;
+		node.Previous = previous;
+		node.Next = next;
 
-		node.Pre.Post = node;
-		node.Post.Pre = node;
+		previous.Next = node;
+		next.Previous = node;
 	}
 
-	private Node _PopHead() {
-		if (_head.Post == _tail)
-			return null;
-		
-		var node = _head.Post;
+	private bool _TryPopHead(out Node node) {
+		if (_head.Next == _tail)
+		{
+			node = null;
+			return false;
+		}
 
-		node.Post.Pre = node.Pre;
-		node.Pre.Post = node.Post;
-
-		node.Post = null;
-		node.Pre = null;
-
-		return node;
+		var head = _head.Next;
+		_Extract(head);
+		node = head;
+		return true;
 	}
 }
