@@ -1,5 +1,5 @@
 /*
-986. Interval List Intersections
+LeetCode: 986. Interval List Intersections
 */
 
 using System;
@@ -8,45 +8,39 @@ using System.Linq;
 
 public class IntervalListIntersections {
 	private class Interval {
-		public int left;
-		public int right;
+		public int Start;
+		public int End;
 	}
-
     public int[][] IntervalIntersection(int[][] A, int[][] B) {
-        var intervals1 = A.Select(v => new Interval {
-			left = v[0],
-			right = v[1],
-		}).ToArray();
-		var intervals2 = B.Select(v => new Interval {
-			left = v[0],
-			right = v[1],
-		}).ToArray();
+		List<int[]> results = new List<int[]>();
 
-		var list = new List<Interval>();
+		if (A == null || A.Length == 0 ||
+			B == null || B.Length == 0)
+			return results.ToArray();
+
+		var list1 = A.Select(a => new Interval{Start = a[0], End = a[1]}).ToArray();
+		var list2 = B.Select(b => new Interval{Start = b[0], End = b[1]}).ToArray();
 		var i = 0;
 		var j = 0;
+		while (i < list1.Length && j < list2.Length) {
+			var interval = _Intersect(list1[i], list2[j]);
 
-		while (i < intervals1.Length && j < intervals2.Length) {
-			var newInterval = _Intersect(intervals1[i], intervals2[j]);
-			if (newInterval != null)
-				list.Add(newInterval);
+			if (interval != null)
+				results.Add(new int[] {interval.Start, interval.End});
 			
-			if (intervals1[i].right <= intervals2[j].right) ++i;
+			if (list1[i].End <= list2[j].End) ++i;
 			else ++j;
 		}
 
-		return list.Select(e => new int[] {e.left, e.right}).ToArray();
+		return results.ToArray();
     }
 
-	private Interval _Intersect(Interval interval1, Interval interval2) {
-		var left = Math.Max(interval1.left, interval2.left);
-		var right = Math.Min(interval1.right, interval2.right);
-
-		if (left > right)
-			return null;
-		return new Interval {
-			left = left,
-			right = right
-		};
+	private Interval _Intersect(Interval interval1, Interval interval2)
+	{
+		var left = Math.Max(interval1.Start, interval2.Start);
+		var right = Math.Min(interval1.End, interval2.End);
+		if (left > right) return null;
+		return new Interval{Start = left, End = right};
 	}
+
 }
