@@ -1,5 +1,5 @@
 /*
-525. Contiguous Array
+LeetCode: 525. Contiguous Array
 */
 
 using System;
@@ -7,37 +7,43 @@ using System.Collections.Generic;
 
 
 public class ContiguousArray {
-	private class DiffLen2IndexDic {
+	private class Mapping {
 		private Dictionary<int, int> _dic = new Dictionary<int, int>();
 
-		public void Set(int diffLen, int index) {
-			_dic[diffLen] = index;
-		}
-		public bool TryGetIndex(int diffLen, out int index) {
-			index = -10;
-			if (!_dic.ContainsKey(diffLen)) return false;
+		public bool TryMap(int diffLen, out int index) {
+			if (!_dic.ContainsKey(diffLen)) {
+				index = int.MinValue;
+				return false;
+			}
 
 			index = _dic[diffLen];
 			return true;
 		}
-	}
 
+		public bool Add(int diffLen, int index) {
+			_dic[diffLen] = index;
+			return true;
+		}
+	}
     public int FindMaxLength(int[] nums) {
-        if (nums == null || nums.Length == 0) return 0;
+    	if (nums == null || nums.Length == 0) return 0;
+
+		Mapping dic = new Mapping();
+		dic.Add(0, -1);
 
 		var maxLen = 0;
-		var dic = new DiffLen2IndexDic();
-		dic.Set(0, -1);
-
-		var diff = 0;
+		var diffLen = 0;
 		for (int i = 0; i < nums.Length; ++i) {
-			diff += (nums[i] == 0)? 1 : -1;
-			int preIndex = 0;
-			if (dic.TryGetIndex(diff, out preIndex))
-				maxLen = Math.Max(maxLen, i - preIndex);
-			else
-				dic.Set(diff, i);
+			diffLen += (nums[i] == 0)? 1 : -1;
+
+			var index = 0;
+			if (dic.TryMap(diffLen, out index)) {
+				maxLen = Math.Max(i - index, maxLen);
+			} else {
+				dic.Add(diffLen, i);
+			}
 		}
+
 		return maxLen;
     }
 }
