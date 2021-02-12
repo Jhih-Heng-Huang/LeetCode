@@ -1,2 +1,3 @@
 add_library(329_LongestIncreasingPathInAMatrix SHARED 329_LongestIncreasingPathInAMatrix.cs)
 add_library(72_EditDistance SHARED 72_EditDistance.cs)
+add_library(1008_ConstructBinarySearchTreeFromPreorderTraversal SHARED 1008_ConstructBinarySearchTreeFromPreorderTraversal.cs)
