@@ -1,28 +1,31 @@
+/*
+LeetCode: 518. Coin Change 2
+*/
+
 using System;
 
-public class CoinChange2 {
-    public int Change(int amount, int[] coins) {
-		if (amount == 0 || coins.Length == 0)
-			return 0;
-		
-		return _Change(amount, coins);
-    }
+namespace LeetCode.Problem_518
+{
+	public class CoinChange2 {
+		public int Change(int amount, int[] coins) {
+			if (amount <= 0) return 1;
 
-	private int _Change(int amount, int[] coins) {
-		var dp = _GenTable(amount);
-		dp[0] = 1;
+			var table = _GenTable(amount);
 
-		foreach (var coin in coins)
-			for (int i = coin; i < amount; ++i)
-				dp[i] += dp[i-coin];
+			foreach (var coin in coins)
+				for (int i = coin; i <= amount; ++i)
+					table[i] += table[i-coin];
 
-		return dp[amount-1];
-	}
+			return table[amount];
+		}
 
-	private int[] _GenTable(int amount) {
-		var table = new int[amount];
-		for (int i = 0; i < amount; ++i)
-			table[i] = 0;
-		return table;
+		private int[] _GenTable(int amount) {
+			var table = new int[amount + 1];
+
+			for (int i = 0; i <= amount; ++i)
+				table[i] = 0;
+			table[0] = 1;
+			return table;
+		}
 	}
 }

@@ -2,3 +2,4 @@ add_library(329_LongestIncreasingPathInAMatrix SHARED 329_LongestIncreasingPathI
 add_library(72_EditDistance SHARED 72_EditDistance.cs)
 add_library(1008_ConstructBinarySearchTreeFromPreorderTraversal SHARED 1008_ConstructBinarySearchTreeFromPreorderTraversal.cs)
 add_library(785_IsGraphBipartite SHARED 785_IsGraphBipartite.cs)
+add_library(518_CoinChange2 SHARED 518_CoinChange2.cs)
