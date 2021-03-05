@@ -5,28 +5,29 @@ using System.Collections.Generic;
 */
 
 public class LeetCodePossibleBipartition {
-	private class Node {
+    private class Node
+	{
 		public int Color = 0;
 		public List<int> Nexts = new List<int>();
-	}
+	};
 
-    public bool PossibleBipartition(
-        int N, int[][] dislikes)
+	public bool PossibleBipartition(
+		int N, int[][] dislikes)
     {
-		if (N == 0 || dislikes == null ||
+		if (N == 0 ||
+			dislikes == null ||
 			dislikes.Length == 0)
 			return true;
-
-		var nodes = _GenNodes(N, dislikes);
+		var nodes = _GenNotes(N, dislikes);
 		return _IsBipartition(nodes);
 	}
 
-	private Node[] _GenNodes(int n, int[][] edges) {
-		var nodes = new Node[n+1];
+	private Node[] _GenNotes(int N, int[][] edges) {
+		var nodes = new Node[N+1];
 
 		for (int i = 0; i < nodes.Length; ++i)
 			nodes[i] = new Node();
-
+		
 		foreach (var edge in edges) {
 			var i = edge[0];
 			var j = edge[1];
@@ -38,29 +39,34 @@ public class LeetCodePossibleBipartition {
 	}
 
 	private bool _IsBipartition(Node[] nodes) {
-		for (int i = 0; i < nodes.Length; ++i)
+		if (nodes == null ||
+			nodes.Length == 0) return true;
+		
+		for (int i = 1; i < nodes.Length; ++i)
 			if (nodes[i].Color == 0 &&
-				!_IsBipartition(i, 1, nodes)) 
+				!_IsBipartition(i, 1, nodes))
 				return false;
 		return true;
 	}
 
 	private bool _IsBipartition(
-		int i, int color, Node[] nodes)
+		int id, int color, Node[] nodes)
 	{
-		if (nodes[i].Color == 0)
-			nodes[i].Color = color;
+		if (nodes[id].Color == 0)
+			nodes[id].Color = color;
+		else if (nodes[id].Color != color)
+			return false;
+		
+		var nextColor = color == 1? 2 : 1;
 
-		var nextColor = nodes[i].Color == 1? 2 : 1;
-
-		foreach (var next in nodes[i].Nexts) {
+		foreach (var next in nodes[id].Nexts)
+		{
 			if (nodes[next].Color == 0 &&
 				!_IsBipartition(next, nextColor, nodes))
 				return false;
 			if (nodes[next].Color != nextColor)
 				return false;
 		}
-
 		return true;
 	}
 }
