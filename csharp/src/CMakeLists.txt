@@ -4,3 +4,4 @@ add_library(1008_ConstructBinarySearchTreeFromPreorderTraversal SHARED 1008_Cons
 add_library(785_IsGraphBipartite SHARED 785_IsGraphBipartite.cs)
 add_library(518_CoinChange2 SHARED 518_CoinChange2.cs)
 add_library(886_PossibleBipartition SHARED 886_PossibleBipartition.cs)
+add_library(1277_CountSquareSubmatriceswithAllOnes SHARED 1277_CountSquareSubmatriceswithAllOnes.cs)
