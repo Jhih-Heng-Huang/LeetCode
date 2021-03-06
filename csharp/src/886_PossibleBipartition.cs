@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 
 /*
-886. Possible Bipartition
+LeetCode: 886. Possible Bipartition
 */
 
 public class LeetCodePossibleBipartition {
