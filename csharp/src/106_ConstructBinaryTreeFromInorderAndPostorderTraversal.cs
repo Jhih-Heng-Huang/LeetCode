@@ -1,6 +1,7 @@
 // 106. Construct Binary Tree from Inorder and Postorder Traversal
 
 using System;
+using System.Linq;
 
 public class LeetCode106ConstructBinaryTreeFromInorderAndPostorderTraversal {
 	public class TreeNode {
@@ -17,34 +18,35 @@ public class LeetCode106ConstructBinaryTreeFromInorderAndPostorderTraversal {
 	public TreeNode BuildTree(int[] inorder,
 							  int[] postorder)
 	{
-		if (inorder.Length == 0 || postorder.Length == 0) return null;
-
+		if (inorder == null ||
+			inorder.Length == 0)
+			return null;
 		return _BuildTree(
 			inorder, 0, inorder.Length-1,
 			postorder, 0, postorder.Length-1);
 	}
 
 	private TreeNode _BuildTree(
-		int[] inorder,
-		int lIn, int rIn,
-		int[] postorder,
-		int lPost, int rPost)
+		int[] inorder, int inL, int inR,
+		int[] postorder, int postL, int postR)
 	{
-		if (lIn > rIn) return null;
+		if (inL > inR)
+			return null;
+		
+		var node = new TreeNode();
+		node.val = postorder[postR];
+		if (inL == inR) return node;
 
-		var val = postorder[rPost];
-		var node = new TreeNode(val);
-		if (lIn == rIn) return node;
-
-		var index = Array.IndexOf(inorder, val);
-		var len = index - lIn;
+		var i = inorder.ToList().FindIndex(v => v == node.val);
+		var len = i - inL;
 
 		node.left = _BuildTree(
-			inorder, lIn, index - 1,
-			postorder, lPost, lPost + len - 1);
+			inorder, inL, i-1,
+			postorder, postL, postL + len-1);
 		node.right = _BuildTree(
-			inorder, index+1, rIn,
-			postorder, lPost+len, rPost-1);
+			inorder, i+1, inR,
+			postorder, postL + len, postR-1);
+
 		return node;
 	}
 }
