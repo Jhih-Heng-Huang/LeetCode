@@ -6,62 +6,51 @@ using System.Linq;
 
 public class Leet638ShoppingOffers
 {
-	private Dictionary<string, int> _dic = null;
-
 	public int ShoppingOffers(IList<int> price, IList<IList<int>> special, IList<int> needs)
 	{
-		if (price.Count == 0 ||
-			price.All(p => p == 0) ||
-			needs.Count == 0 ||
-			needs.All(n => n == 0))
+		if (price == null || price.Count == 0 ||
+			needs == null || needs.Count == 0)
 			return 0;
-
-		_dic = new Dictionary<string, int>();
-		return _GetCheapestPrice(price, special, needs);
+		
+		var needs2Price = new Dictionary<string, int>();
+		return _GetMinPrice(price, special, needs, needs2Price);
 	}
 
-	private int _GetCheapestPrice(
-		IList<int> price,
-		IList<IList<int>> special,
-		IList<int> needs)
-    {
-		var key = _GetKey(needs);
-		if (_dic.ContainsKey(key)) return _dic[key];
-
-		var result = 0;
+	private int _GetMinPrice(
+		IList<int> price, IList<IList<int>> special,
+		IList<int> needs, Dictionary<string, int> needs2Price)
+	{
+		var key = _ToKey(needs);
+		if (needs2Price.ContainsKey(key))
+			return needs2Price[key];
+		
+		var minPrice = 0;
 		for (int i = 0; i < needs.Count; ++i)
-			result += needs[i] * price[i];
+			minPrice += price[i] * needs[i];
 
 		foreach (var sp in special)
-        {
-			var restNeeds = _GenRestNeeds(needs, sp);
-			if (restNeeds == null) continue;
-
-			var newPrice = _GetCheapestPrice(price, special, restNeeds) + sp.Last();
-			result = Math.Min(result, newPrice);
-		}
-
-		_dic[key] = result;
-		return result;
-    }
-
-	private IList<int> _GenRestNeeds(IList<int> needs, IList<int> sp)
-    {
-		var list = new List<int>();
-		for (int i = 0; i < needs.Count; ++i)
 		{
-			var restCount = needs[i] - sp[i];
-			if (restCount < 0) return null;
-			list.Add(restCount);
-		}
-		return list;
-    }
+			var restNeeds = new List<int>();
+			for (int i = 0; i < needs.Count; ++i)
+				restNeeds.Add(needs[i] - sp[i]);
 
-	private string _GetKey(IList<int> needs)
-    {
-		var key = string.Empty;
-		foreach (var n in needs)
-			key += n.ToString() + ",";
+			if (restNeeds.Any(n => n < 0))
+				continue;
+
+			var newPrice = sp.Last() +
+				_GetMinPrice(price, special, restNeeds, needs2Price);
+			minPrice = Math.Min(minPrice, newPrice);
+		}
+
+		needs2Price[key] = minPrice;
+		return minPrice;
+	}
+
+	private string _ToKey(IList<int> needs)
+	{
+		string key = string.Empty;
+		foreach (var need in needs)
+			key += string.Format("{0},", need);
 		return key;
-    }
+	}
 }
