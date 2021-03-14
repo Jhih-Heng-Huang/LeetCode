@@ -8,3 +8,4 @@ add_library(1277_CountSquareSubmatriceswithAllOnes SHARED 1277_CountSquareSubmat
 add_library(515_FindLargestValueInEachTreeRow SHARED 515_FindLargestValueInEachTreeRow.cs)
 add_library(106_ConstructBinaryTreeFromInorderAndPostorderTraversal SHARED 106_ConstructBinaryTreeFromInorderAndPostorderTraversal.cs)
 add_library(827_MakingALargeIsland SHARED 827_MakingALargeIsland.cs)
+add_library(1_TwoSum SHARED 1_TwoSum.cs)
