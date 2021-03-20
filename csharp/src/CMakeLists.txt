@@ -10,3 +10,4 @@ add_library(106_ConstructBinaryTreeFromInorderAndPostorderTraversal SHARED 106_C
 add_library(827_MakingALargeIsland SHARED 827_MakingALargeIsland.cs)
 add_library(1_TwoSum SHARED 1_TwoSum.cs)
 add_library(638_ShoppingOffers SHARED 638_ShoppingOffers.cs)
+add_library(1192_CriticalConnectionsInANetwork SHARED 1192_CriticalConnectionsInANetwork.cs)
