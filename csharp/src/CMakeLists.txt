@@ -11,3 +11,6 @@ add_library(827_MakingALargeIsland SHARED 827_MakingALargeIsland.cs)
 add_library(1_TwoSum SHARED 1_TwoSum.cs)
 add_library(638_ShoppingOffers SHARED 638_ShoppingOffers.cs)
 add_library(1192_CriticalConnectionsInANetwork SHARED 1192_CriticalConnectionsInANetwork.cs)
+
+add_library(20_ValidParentheses SHARED 20_ValidParentheses.cs)
+set_target_properties(20_ValidParentheses PROPERTIES VS_DOTNET_REFERENCES "System")
