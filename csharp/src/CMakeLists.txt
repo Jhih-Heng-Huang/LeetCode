@@ -14,3 +14,5 @@ add_library(1192_CriticalConnectionsInANetwork SHARED 1192_CriticalConnectionsIn
 
 add_library(20_ValidParentheses SHARED 20_ValidParentheses.cs)
 set_target_properties(20_ValidParentheses PROPERTIES VS_DOTNET_REFERENCES "System")
+
+add_library(22_GenerateParentheses SHARED 22_GenerateParentheses.cs)
