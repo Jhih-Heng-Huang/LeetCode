@@ -18,3 +18,5 @@ set_target_properties(20_ValidParentheses PROPERTIES VS_DOTNET_REFERENCES "Syste
 add_library(22_GenerateParentheses SHARED 22_GenerateParentheses.cs)
 
 add_library(468_ValidateIPAddress SHARED 468_ValidateIPAddress.cs)
+
+add_library(983_MinimumCostForTickets SHARED 983_MinimumCostForTickets.cs)
