@@ -1,40 +1,60 @@
-﻿using System;
+﻿/*
+LeetCode: 56. Merge Intervals
+*/
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace csharp.Lib
+namespace LeetCode.Problem_56
 {
 	public class LeetCode56MergeIntervals
 	{
-		public int[][] Merge(int[][] intervals)
+		private class Interval
 		{
-			var list = new List<int[]>();
-			if (intervals == null || intervals.Length == 0)
-				return list.ToArray();
-
-			var orderIntervals = intervals.OrderBy(interval => interval[0]).ToArray();
-			
-			var newInterval = (int[]) orderIntervals[0].Clone();
-			for (int i = 1; i < orderIntervals.Length; ++i) {
-				if (_IsIntersect(newInterval, orderIntervals[i]))
-				{
-					newInterval[0] = Math.Min(newInterval[0], orderIntervals[i][0]);
-					newInterval[1] = Math.Max(newInterval[1], orderIntervals[i][1]);
-				} else {
-					list.Add(newInterval);
-					newInterval = (int[]) orderIntervals[i].Clone();
-				}
-			}
-			list.Add(newInterval);
-
-			return list.ToArray();
+			public int left;
+			public int right;
 		}
 
-		private bool _IsIntersect(int[] interval1, int[] interval2) {
-			var left = Math.Max(interval1[0], interval2[0]);
-			var right = Math.Min(interval1[1], interval2[1]);
+		public int[][] Merge(int[][] intervals)
+		{
+			if (intervals == null || intervals.Length == 0)
+				return new int[0][];
+			
+			return _Merge(intervals
+				.OrderBy(interval => interval[0])
+				.Select(interval => new Interval
+				{
+					left = interval[0],
+					right = interval[1],
+				})
+				.ToArray());
+		}
 
-			return left <= right;
+		private int[][] _Merge(Interval[] intervals)
+		{
+			var list = new List<int[]>();
+
+			Interval lastInterval = new Interval
+			{
+				left = intervals[0].left,
+				right = intervals[0].right,
+			};
+
+			foreach (var interval in intervals)
+			{
+				if (lastInterval.right >= interval.left)
+					lastInterval.right = Math.Max(lastInterval.right, interval.right);
+				else
+				{
+					list.Add(new int[]{ lastInterval.left, lastInterval.right});
+					lastInterval.left = interval.left;
+					lastInterval.right = interval.right;
+				}
+			}
+			list.Add(new int[] {lastInterval.left, lastInterval.right});
+
+			return list.ToArray();
 		}
 	}
 }
