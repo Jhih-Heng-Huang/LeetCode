@@ -1,10 +1,11 @@
 ﻿// LeetCode: 264.Ugly Number II
 
+using System;
 using System.Linq;
 
-namespace csharp.Lib
+namespace LeetCode.Problem_264
 {
-	public class LeetCode264UglyNumberII
+	public class Solution
 	{
 		private class PrimePointer
 		{
@@ -14,31 +15,46 @@ namespace csharp.Lib
 
 		public int NthUglyNumber(int n)
 		{
-			if (n < 1) return 0;
-			if (n == 1) return 1;
+			if (n <= 1) return 1;
 
 			var primePointers = _GenPrimePointers();
-			var dp = new int[n];
-			dp[0] = 1;
 
-			for (int i = 1; i < n; ++i) {
-				dp[i] = primePointers.Min(p => p.Value * dp[p.Position]);
+			var table = new int[n];
+			table[0] = 1;
+			for (int i = 1; i < table.Length; ++i)
+			{
+				var min = int.MaxValue;
+				foreach (var primePointer in primePointers)
+					min = Math.Min(min, primePointer.Value * table[primePointer.Position]);
+				table[i] = min;
 
-				foreach (var p in primePointers) {
-					if (dp[i] == p.Value * dp[p.Position])
-						++p.Position;
-				}
+				foreach (var primePointer in primePointers)
+					if (primePointer.Value * table[primePointer.Position] == min)
+						++primePointer.Position;
 			}
 
-			return dp.Last();
+			return table[n-1];
 		}
 
-		private PrimePointer[] _GenPrimePointers() {
+		private PrimePointer[] _GenPrimePointers()
+		{
 			return new PrimePointer[]
 			{
-				new PrimePointer{ Value = 2, Position = 0},
-				new PrimePointer{ Value = 3, Position = 0},
-				new PrimePointer{ Value = 5, Position = 0},
+				new PrimePointer
+				{
+					Value = 2,
+					Position = 0,
+				},
+				new PrimePointer
+				{
+					Value = 3,
+					Position = 0,
+				},
+				new PrimePointer
+				{
+					Value = 5,
+					Position = 0,
+				},
 			};
 		}
 	}
