@@ -1,104 +1,85 @@
 /*
-210. Course Schedule II
+LeetCode: 210. Course Schedule II
 */
 
 using System.Collections.Generic;
 using System.Linq;
 
-public class CourseScheduleII {
-	private enum State {
-		NonVisit,
-		Visiting,
-		Visited,
-	}
+namespace LeetCode.Problem_210
+{
+	public class CourseScheduleII {
+		private enum State
+		{
+			NonVisited,
+			Visiting,
+			Visited,
+		}
 
-	private class Course {
-		public State VisitState = State.NonVisit;
-		public bool IsValid = false;
-		public List<int> Requires = new List<int>();
-	}
-	public int[] FindOrder(int numCourses,
-						   int[][] prerequisites)
-	{
-		if (numCourses <= 0)
-			return new int[]{};
+		private class Course
+		{
+			public State State = State.NonVisited;
+			public List<int> Requires = new List<int>();
+		}
 
-		var courses = _GenCourses(numCourses, prerequisites);
-		var orders = new List<int>();
-
-		for (int i = 0; i < courses.Length; ++i) {
-			int[] subOrders = new int[]{};
-
-			if (_IsNonVisit(courses[i]) &&
-				!_TryRecordTravelOrders(i, courses, out subOrders))
+		public int[] FindOrder(int numCourses,
+			int[][] prerequisites)
+		{
+			if (numCourses == 0)
 				return new int[]{};
+			
+			var courses = _GenCourses(numCourses, prerequisites);
+			var orders = new List<int>();
 
-			orders.AddRange(subOrders);
+			for (int i = 0; i < courses.Length; ++i)
+			{
+				var subOrders = new List<int>();
+				if (_IsNotVisited(courses[i]) &&
+					!_TryToTravel(i, courses, subOrders))
+					return new int[]{};
+				orders.AddRange(subOrders);
+			}
+
+			return orders.ToArray();
 		}
 
-		return orders.ToArray();
-	}
+		private Course[] _GenCourses(int num, int[][] edges)
+		{
+			var courses = new Course[num];
+			for (int i = 0; i < num; ++i)
+				courses[i] = new Course();
 
-	private Course[] _GenCourses(in int num, in int[][] edges) {
-		var courses = new Course[num];
+			foreach (var edge in edges)
+			{
+				var i = edge[0];
+				var j = edge[1];
+				courses[i].Requires.Add(j);
+			}
 
-		for (int i = 0; i < num; ++i) courses[i] = new Course();
-
-		foreach (var edge in edges) {
-			var i = edge[0];
-			var j = edge[1];
-			courses[i].Requires.Add(j);
+			return courses;
 		}
 
-		return courses;
-	}
+		private bool _IsNotVisited(Course course)
+			=> course.State == State.NonVisited;
 
-	private bool _IsNonVisit(in Course course) {
-		return course.VisitState == State.NonVisit;
-	}
-
-	private bool _IsVisited(in Course course) {
-		return course.VisitState == State.Visited;
-	}
-
-	private bool _IsVisiting(in Course course) {
-		return course.VisitState == State.Visiting;
-	}
-
-	private bool _TryRecordTravelOrders(
-		in int current,
-		Course[] courses,
-		out int[] orders)
-	{
-		if (_IsVisited(courses[current])) {
-			orders = null;
-			return courses[current].IsValid;
-		}
-		if (_IsVisiting(courses[current])) {
-			goto Fail;
+		private bool _IsVisiting(Course course)
+		{
+			return course.State == State.Visiting;
 		}
 
-		var newOrders = new List<int>();
-		courses[current].VisitState = State.Visiting;
+		private bool _TryToTravel(int i, Course[] courses, List<int> orders)
+		{
+			if (_IsVisiting(courses[i])) return false;
+			if (!_IsNotVisited(courses[i])) return true;
 
-		foreach (var require in courses[current].Requires) {
-			int[] subOrders = new int[]{};
-			if (!_TryRecordTravelOrders(require, courses, out subOrders))
-				goto Fail;
-
-			newOrders.AddRange(subOrders);
+			courses[i].State = State.Visiting;
+			foreach (var next in courses[i].Requires)
+			{
+				if (!_TryToTravel(next, courses, orders))
+					return false;
+			}
+			courses[i].State = State.Visited;
+			orders.Add(i);
+			return true;
 		}
-		goto Success;
-	Fail:
-		courses[current].VisitState = State.Visited;
-		courses[current].IsValid = false;
-		orders = null;
-		return false;
-	Success:
-		courses[current].VisitState = State.Visited;
-		courses[current].IsValid = true;
-		newOrders.Add(current);
-		orders = newOrders.ToArray();
-		return true;
 	}
 }

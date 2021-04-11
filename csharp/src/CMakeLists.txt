@@ -24,3 +24,5 @@ add_library(983_MinimumCostForTickets SHARED 983_MinimumCostForTickets.cs)
 add_library(264_UglyNumberII SHARED 264_UglyNumberII.cs)
 
 add_library(56_MergeIntervals SHARED 56_MergeIntervals.cs)
+
+add_library(210_CourseScheduleII SHARED 210_CourseScheduleII.cs)
