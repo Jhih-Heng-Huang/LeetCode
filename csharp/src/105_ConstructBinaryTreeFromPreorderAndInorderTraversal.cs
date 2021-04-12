@@ -1,6 +1,6 @@
 // LeetCode: 105. Construct Binary Tree from Preorder and Inorder Traversal
 
-namespace csharp.Lib
+namespace LeetCode.Problem_105
 {
 	public class LeetCode105ConstructBinaryTreeFromPreorderAndInorderTraversal
 	{
@@ -26,42 +26,37 @@ namespace csharp.Lib
 		}
 
 		private TreeNode _BuildTree(
-			int[] preorder, int leftPreOrder, int rightPreorder,
+			int[] preorder, int leftPreorder, int rightPreorder,
 			int[] inorder, int leftInorder, int rightInorder)
 		{
-			if (leftPreOrder > rightPreorder) return null;
+			if (leftPreorder > rightPreorder ||
+				leftInorder > rightInorder)
+				return null;
 
-			var rootVal = preorder[leftPreOrder];
-			var node = new TreeNode(rootVal);
+			var node = new TreeNode();
+			node.val = preorder[leftPreorder];
+			if (leftPreorder == rightPreorder ||
+				leftInorder == rightInorder)
+				return node;
 
-			if (leftPreOrder == rightPreorder) return node;
-
-			var index = _FindIndexOf(rootVal, inorder, leftInorder, rightInorder);
-			var length = index - leftInorder;
-
+			var index = _FindIndex(node.val, inorder, leftInorder, rightInorder);
+			var len = index - leftInorder;
 			node.left = _BuildTree(
-				preorder, leftPreOrder + 1, leftPreOrder + length,
-				inorder, leftInorder, index - 1);
-			node.right = _BuildTree(
-				preorder, leftPreOrder + length + 1, rightPreorder,
-				inorder, index + 1, rightInorder);
-
+				preorder, leftPreorder+1, leftPreorder + len,
+				inorder, leftInorder, index-1);
+			node.right = _BuildTree(preorder, leftPreorder + len + 1, rightPreorder,
+				inorder, index+1, rightInorder);
 			return node;
 		}
 
-		private int _FindIndexOf(int val, int[] list, int left, int right) {
+		private int _FindIndex(int value, int[] list, int left, int right)
+		{
 			if (left > right) return -1;
 
-			var selectedIndex = -1;
+			for (int i = left; i <= right; ++i)
+				if (list[i] == value) return i;
 
-			for (int i = left; i <= right; ++i) {
-				if (list[i] == val) {
-					selectedIndex = i;
-					break;
-				}
-			}
-
-			return selectedIndex;
+			return -1;
 		}
 	}
 }
