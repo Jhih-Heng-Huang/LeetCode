@@ -32,3 +32,5 @@ add_library(105_ConstructBinaryTreeFromPreorderAndInorderTraversal SHARED 105_Co
 add_library(313_SuperUglyNumber SHARED 313_SuperUglyNumber.cs)
 
 add_library(5_LongestPalindromicSubstring SHARED 5_LongestPalindromicSubstring.cs)
+
+add_library(787_CheapestFlightsWithinKStops SHARED 787_CheapestFlightsWithinKStops.cs)
