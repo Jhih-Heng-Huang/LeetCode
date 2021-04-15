@@ -30,3 +30,5 @@ add_library(210_CourseScheduleII SHARED 210_CourseScheduleII.cs)
 add_library(105_ConstructBinaryTreeFromPreorderAndInorderTraversal SHARED 105_ConstructBinaryTreeFromPreorderAndInorderTraversal.cs)
 
 add_library(313_SuperUglyNumber SHARED 313_SuperUglyNumber.cs)
+
+add_library(5_LongestPalindromicSubstring SHARED 5_LongestPalindromicSubstring.cs)
