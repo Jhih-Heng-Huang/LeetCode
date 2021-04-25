@@ -36,3 +36,5 @@ add_library(5_LongestPalindromicSubstring SHARED 5_LongestPalindromicSubstring.c
 add_library(787_CheapestFlightsWithinKStops SHARED 787_CheapestFlightsWithinKStops.cs)
 
 add_library(279_PerfectSquares SHARED 279_PerfectSquares.cs)
+
+add_library(146_LRUCache SHARED 146_LRUCache.cs)
