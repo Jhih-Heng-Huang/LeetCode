@@ -38,3 +38,5 @@ add_library(787_CheapestFlightsWithinKStops SHARED 787_CheapestFlightsWithinKSto
 add_library(279_PerfectSquares SHARED 279_PerfectSquares.cs)
 
 add_library(146_LRUCache SHARED 146_LRUCache.cs)
+
+add_library(101_SymmetricTree SHARED 101_SymmetricTree.cs)
