@@ -2,7 +2,6 @@
 LeetCode: 22. Generate Parentheses
 */
 
-using System;
 using System.Collections.Generic;
 
 namespace LeetCode.Problem_22
@@ -11,36 +10,22 @@ namespace LeetCode.Problem_22
 	{
 		public IList<string> GenerateParenthesis(int n)
 		{
-			if (n <= 0) return new List<string>();
-			return _GenerateParenthesis(n, 0);
+			var list = new List<string>();
+			_GenParenthesis(list, string.Empty, n, 0);
+			return list;
 		}
 
-		private IList<string> _GenerateParenthesis(int leftCount, int restRightCount)
+		private void _GenParenthesis(
+			List<string> list, string str,
+			int leftNum, int rightNum)
 		{
-			var result = new List<string>();
-			if (leftCount <= 0)
-				result.Add(_GenRightParenthesis(restRightCount));
-			else
-			{
-				for (int i = 0; i <= restRightCount; ++i)
-				{
-					var left = _GenRightParenthesis(i) + "(";
-					var rightResults = _GenerateParenthesis(
-						leftCount - 1, restRightCount - i + 1);
-					
-					foreach (var right in rightResults)
-						result.Add(left + right);
-				}
-			}
-			return result;
-		}
-
-		private string _GenRightParenthesis(int count)
-		{
-			var str = string.Empty;
-			for (int i = 0; i < count; ++i)
-				str += ")";
-			return str;
+			if (leftNum == 0 && rightNum == 0)
+				list.Add(str);
+			
+			if (rightNum > 0)
+				_GenParenthesis(list, str + ")", leftNum, rightNum-1);
+			if (leftNum > 0)
+				_GenParenthesis(list, str + "(", leftNum-1, rightNum+1);
 		}
 	}
 }
