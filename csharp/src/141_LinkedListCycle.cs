@@ -19,11 +19,14 @@ namespace LeetCode.Problem_141
 			if (head == null || head.next == null) return false;
 			var slowPointer = head;
 			var fastPointer = head.next;
-			do {
-				if (fastPointer.next == null || fastPointer.next.next == null) return false;
+			while (slowPointer != fastPointer)
+			{
+				if (fastPointer.next == null ||
+					fastPointer.next.next == null)
+					return false;
 				fastPointer = fastPointer.next.next;
 				slowPointer = slowPointer.next;
-			}while(slowPointer != fastPointer);
+			}
 			return true;
 		}
 	}
