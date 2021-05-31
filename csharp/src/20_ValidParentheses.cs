@@ -14,8 +14,7 @@ namespace LeetCode.Problem_20
 			var stack = new Stack<char>();
 			foreach (var c in s)
 			{
-				if (_IsLeft(c))
-					stack.Push(c);
+				if (_IsLeft(c)) stack.Push(c);
 				else if (stack.Count > 0 && _IsPaired(stack.Peek(), c))
 					stack.Pop();
 				else return false;
