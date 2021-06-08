@@ -16,18 +16,18 @@ namespace LeetCode.Problem_22
 		}
 
 		private void _GenParenthesis(IList<string> list, string result,
-			int leftCount, int rightCount)
+			int leftNum, int rightNum)
 		{
-			if (leftCount == 0 && rightCount == 0)
+			if (leftNum == 0 && rightNum == 0)
 			{
 				list.Add(result);
 				return;
 			}
 
-			if (leftCount > 0)
-				_GenParenthesis(list, result +"(", leftCount-1, rightCount+1);
-			if (rightCount > 0)
-				_GenParenthesis(list, result+")", leftCount, rightCount-1);
+			if (leftNum > 0)
+				_GenParenthesis(list, result+"(", leftNum-1, rightNum+1);
+			if (rightNum > 0)
+				_GenParenthesis(list, result+")", leftNum, rightNum-1);
 		}
 	}
 }
