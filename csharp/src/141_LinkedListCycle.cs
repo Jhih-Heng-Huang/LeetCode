@@ -17,15 +17,13 @@ namespace LeetCode.Problem_141
 	{
 		public bool HasCycle(ListNode head) {
 			if (head == null || head.next == null) return false;
-			var slowPointer = head;
-			var fastPointer = head.next;
-			while (slowPointer != fastPointer)
+			var slow = head;
+			var fast = head.next;
+			while (slow != fast)
 			{
-				if (fastPointer.next == null ||
-					fastPointer.next.next == null)
-					return false;
-				fastPointer = fastPointer.next.next;
-				slowPointer = slowPointer.next;
+				if (fast.next == null || fast.next.next == null) return false;
+				slow = slow.next;
+				fast = fast.next.next;
 			}
 			return true;
 		}
