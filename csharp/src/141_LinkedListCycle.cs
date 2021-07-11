@@ -21,7 +21,8 @@ namespace LeetCode.Problem_141
 			var fast = head.next;
 			while (slow != fast)
 			{
-				if (fast.next == null || fast.next.next == null) return false;
+				if (fast.next == null || fast.next.next == null)
+					return false;
 				slow = slow.next;
 				fast = fast.next.next;
 			}
