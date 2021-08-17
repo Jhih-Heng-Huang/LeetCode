@@ -49,3 +49,6 @@ add_library(448_FindAllNumbersDisappearedInAnArray SHARED 448_FindAllNumbersDisa
 
 add_library(283_MoveZeroes SHARED 283_MoveZeroes.cs)
 set_target_properties(283_MoveZeroes PROPERTIES VS_DOTNET_REFERENCES "System")
+
+add_library(155_MinStack SHARED 155_MinStack.cs)
+set_target_properties(155_MinStack PROPERTIES VS_DOTNET_REFERENCES "System")
