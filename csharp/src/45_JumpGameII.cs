@@ -2,30 +2,28 @@
 LeetCode: 45. Jump Game II
 */
 
+using System;
+
 namespace LeetCode.Problem_45
 {
 	public class Solution {
 		public int Jump(int[] nums) {
-			if (nums.Length == 1) return 0;
-
-			// Declare table
-			var minJumpTable = new int[nums.Length];
-			for (int i = 0; i < nums.Length; ++i)
-				minJumpTable[i] = int.MaxValue;
-			minJumpTable[0] = 0;
-
-			// run dynamic programming
-			for (int i = 0; i < nums.Length; ++i)
+			// get min steps
+			var index = 0;
+			var farCanReach = 0;
+			var endIndex = 0;
+			var minSteps = 0;
+			while (endIndex < nums.Length-1)
 			{
-				var maxIndex = i + nums[i] < nums.Length-1?
-					i + nums[i] : nums.Length-1;
-				for (int j = i+1; j <= maxIndex; ++j)
+				while (index <= endIndex && index < nums.Length)
 				{
-					if (minJumpTable[j] > minJumpTable[i] + 1)
-						minJumpTable[j] = minJumpTable[i] + 1;
+					farCanReach = Math.Max(farCanReach, nums[index] + index);
+					++index;
 				}
+				endIndex = farCanReach;
+				++minSteps;
 			}
-			return minJumpTable[minJumpTable.Length - 1];
+			return minSteps;
 		}
 	}
 }
