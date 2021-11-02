@@ -44,3 +44,15 @@ add_library(101_SymmetricTree SHARED 101_SymmetricTree.cs)
 add_library(141_LinkedListCycle SHARED 141_LinkedListCycle.cs)
 
 add_library(240_SearchA2DMatrixII SHARED 240_SearchA2DMatrixII.cs)
+
+add_library(448_FindAllNumbersDisappearedInAnArray SHARED 448_FindAllNumbersDisappearedInAnArray.cs)
+
+add_library(283_MoveZeroes SHARED 283_MoveZeroes.cs)
+set_target_properties(283_MoveZeroes PROPERTIES VS_DOTNET_REFERENCES "System")
+
+add_library(155_MinStack SHARED 155_MinStack.cs)
+set_target_properties(155_MinStack PROPERTIES VS_DOTNET_REFERENCES "System")
+
+add_library(55_JumpGame SHARED 55_JumpGame.cs)
+
+add_library(45_JumpGameII SHARED 45_JumpGameII.cs)

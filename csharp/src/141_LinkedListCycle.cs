@@ -19,10 +19,11 @@ namespace LeetCode.Problem_141
 			if (head == null || head.next == null) return false;
 			var slow = head;
 			var fast = head.next;
-			while (slow != fast)
+			while (fast != slow)
 			{
-				if (fast.next == null || fast.next.next == null) return false;
 				slow = slow.next;
+				if (fast.next == null || fast.next.next == null)
+					return false;
 				fast = fast.next.next;
 			}
 			return true;

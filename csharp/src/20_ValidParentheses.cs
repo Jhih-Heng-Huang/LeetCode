@@ -10,25 +10,23 @@ namespace LeetCode.Problem_20
 		public bool IsValid(string s)
 		{
 			var stack = new Stack<char>();
-
-			foreach (var c in s)
+			foreach (var p in s)
 			{
-				if (_IsLeft(c))
-					stack.Push(c);
-				else if (stack.Count > 0 && _IsPair(stack.Peek(), c))
+				if (_IsLeft(p))
+					stack.Push(p);
+				else if (stack.Count > 0 && _IsPair(stack.Peek(), p))
 					stack.Pop();
 				else return false;
 			}
-
 			return stack.Count == 0;
 		}
 
-		private bool _IsLeft(char c)
-		=> c == '[' || c == '{' || c == '(';
+		private bool _IsLeft(char left)
+		=> left == '(' || left == '[' || left == '{';
 
 		private bool _IsPair(char left, char right)
-		=> (left == '[' && right == ']') ||
-			(left == '{' && right == '}') ||
-			(left == '(' && right == ')');
+		=> (left == '(' && right == ')') ||
+			(left == '[' && right == ']') ||
+			(left == '{' && right == '}');
 	}
 }
