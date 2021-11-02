@@ -5,66 +5,57 @@ LeetCode: 886. Possible Bipartition
 */
 
 public class LeetCodePossibleBipartition {
-    private class Node
+	private enum COLOR
 	{
-		public int Color = 0;
-		public List<int> Nexts = new List<int>();
-	};
+		NONE,
+		WHITE,
+		BLACK,
+	}
+	private class Node
+	{
+		public COLOR color = COLOR.NONE;
+		public List<int> nexts = new List<int>();
+	}
 
 	public bool PossibleBipartition(
 		int N, int[][] dislikes)
     {
-		if (N == 0 ||
-			dislikes == null ||
-			dislikes.Length == 0)
+		if (N == 0 || dislikes == null || dislikes.Length == 0)
 			return true;
-		var nodes = _GenNotes(N, dislikes);
-		return _IsBipartition(nodes);
-	}
-
-	private Node[] _GenNotes(int N, int[][] edges) {
-		var nodes = new Node[N+1];
-
-		for (int i = 0; i < nodes.Length; ++i)
-			nodes[i] = new Node();
-		
-		foreach (var edge in edges) {
-			var i = edge[0];
-			var j = edge[1];
-			nodes[i].Nexts.Add(j);
-			nodes[j].Nexts.Add(i);
-		}
-
-		return nodes;
-	}
-
-	private bool _IsBipartition(Node[] nodes) {
-		if (nodes == null ||
-			nodes.Length == 0) return true;
-		
-		for (int i = 1; i < nodes.Length; ++i)
-			if (nodes[i].Color == 0 &&
-				!_IsBipartition(i, 1, nodes))
+		var nodes = _GenGraph(N, dislikes);
+		for (int id = 1; id <= N; ++id)
+			if (nodes[id].color == COLOR.NONE &&
+				!_IsBipartition(id, nodes, COLOR.WHITE))
 				return false;
+
 		return true;
 	}
 
-	private bool _IsBipartition(
-		int id, int color, Node[] nodes)
+	private Node[] _GenGraph(int numNodes, int[][] edges)
 	{
-		if (nodes[id].Color == 0)
-			nodes[id].Color = color;
-		else if (nodes[id].Color != color)
-			return false;
-		
-		var nextColor = color == 1? 2 : 1;
-
-		foreach (var next in nodes[id].Nexts)
+		var nodes = new Node[numNodes+1];
+		for (int i = 0; i < nodes.Length; ++i)
+			nodes[i] = new Node();
+		foreach (var edge in edges)
 		{
-			if (nodes[next].Color == 0 &&
-				!_IsBipartition(next, nextColor, nodes))
+			var i = edge[0];
+			var j = edge[1];
+			nodes[i].nexts.Add(j);
+			nodes[j].nexts.Add(i);
+		}
+		return nodes;
+	}
+
+	private bool _IsBipartition(int id, Node[] nodes, COLOR assignedColor)
+	{
+		nodes[id].color = assignedColor;
+		var nextColor = assignedColor == COLOR.WHITE? COLOR.BLACK : COLOR.WHITE;
+		foreach (var next in nodes[id].nexts)
+		{
+			if (nodes[next].color == COLOR.NONE &&
+				!_IsBipartition(next, nodes, nextColor))
 				return false;
-			if (nodes[next].Color != nextColor)
+			else if (nodes[next].color != nextColor)
 				return false;
 		}
 		return true;
