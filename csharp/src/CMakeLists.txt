@@ -56,3 +56,5 @@ set_target_properties(155_MinStack PROPERTIES VS_DOTNET_REFERENCES "System")
 add_library(55_JumpGame SHARED 55_JumpGame.cs)
 
 add_library(45_JumpGameII SHARED 45_JumpGameII.cs)
+
+add_library(200_NumberOfIslands SHARED 200_NumberOfIslands.cs)
