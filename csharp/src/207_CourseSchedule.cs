@@ -6,79 +6,57 @@ namespace csharp.Lib
 {
 	public class LeetCode207CourseSchedule
 	{
-		public enum State
+		private enum State
 		{
-			UNVISITED,
-			VISITING,
-			VISITED,
+			Unvisited,
+			Visiting,
+			Visited,
+		}
+		private class Node
+		{
+			public State state = State.Unvisited;
+			public List<int> Nexts = new List<int>();
 		}
 
-		public class Node {
-
-			public State State = State.UNVISITED;
-			public bool HasCycle = false;
-			public HashSet<int> Nexts = new HashSet<int>();
-		}
-
-		public class GraphUtility {
-			private Node[] _nodes;
-			public bool HasCycle(Node[] nodes) {
-				if (nodes == null || nodes.Length == 0)
-					return false;
-				
-				_nodes = (Node[]) nodes.Clone();
-
-				for (int i = 0; i < _nodes.Length; ++i)
-					if (_HasCycle(i)) return true;
-				return false;
-			}
-
-			private bool _HasCycle(int i) {
-				if (_nodes[i].State == State.VISITING) return true;
-				if (_nodes[i].State == State.VISITED) return _nodes[i].HasCycle;
-
-				_nodes[i].State = State.VISITING;
-
-				foreach (var next in _nodes[i].Nexts) {
-					if (_HasCycle(next))
-					{
-						_nodes[i].HasCycle = true;
-						return true;
-					}
-				}
-
-				_nodes[i].State = State.VISITED;
-				_nodes[i].HasCycle = false;
-				return false;
-			}
-		}
 		public bool CanFinish(int numCourses, int[][] prerequisites)
 		{
-			if (numCourses == 0 ||
-				prerequisites == null ||
-				prerequisites.Length == 0)
-				return true;
+			if (prerequisites.Length == 0) return true;
+			var nodes = _GenGraph(numCourses, prerequisites);
 
-			var nodes = _GenNodes(numCourses, prerequisites);
-			var graph = new GraphUtility();
-
-			return !graph.HasCycle(nodes);
+			for (int id = 0; id < nodes.Length; ++id)
+				if (nodes[id].state == State.Unvisited &&
+					_HasCycle(id, nodes))
+					return false;
+			return true;
 		}
 
-		private Node[] _GenNodes(int numNodes, int[][] edges)
+		private Node[] _GenGraph(int num, int[][] edges)
 		{
-			var nodes = new Node[numNodes];
-
-			for (int i = 0; i < nodes.Length; ++i)
+			var nodes = new Node[num];
+			for (int i = 0; i < num; ++i)
 				nodes[i] = new Node();
-
-			foreach (var edge in edges) {
+			foreach (var edge in edges)
+			{
 				var i = edge[0];
 				var j = edge[1];
 				nodes[i].Nexts.Add(j);
 			}
-
 			return nodes;
+		}
+
+		private bool _HasCycle(int id, Node[] nodes)
+		{
+			nodes[id].state = State.Visiting;
+			foreach (var next in nodes[id].Nexts)
+			{
+				if (nodes[next].state == State.Unvisited &&
+					_HasCycle(next, nodes))
+					return true;
+				else if (nodes[next].state == State.Visiting)
+					return true;
+			}
+			nodes[id].state = State.Visited;
+			return false;
 		}
 	}
 }
