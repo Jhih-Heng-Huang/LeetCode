@@ -58,3 +58,5 @@ add_library(55_JumpGame SHARED 55_JumpGame.cs)
 add_library(45_JumpGameII SHARED 45_JumpGameII.cs)
 
 add_library(200_NumberOfIslands SHARED 200_NumberOfIslands.cs)
+
+add_library(1905_CountSubIslands SHARED 1905_CountSubIslands.cs)
