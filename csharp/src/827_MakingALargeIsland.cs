@@ -5,91 +5,68 @@ using System.Collections.Generic;
 using System.Linq;
 
 public class LeetCode827MakingALargeIsland {
-	public int LargestIsland(int[][] grid) {
-		if (grid == null ||
-			grid.Length == 0 ||
-			grid[0].Length == 0)
-			return 0;
-		
-		var map = (int[][]) grid.Clone();
-
-		var color = 2;
-		var color2Size = new Dictionary<int, int>();
-		for (int row = 0; row < map.Length; ++row)
-			for (int col = 0; col < map[row].Length; ++col)
-			{
-				if (map[row][col] == 1)
+	private const int WATER = 0;
+	private const int ISLAND = 1;
+	public int LargestIsland(int[][] grid)
+	{
+		var islandSizeTable = new Dictionary<int, int>();
+		// paint island & record the island size of each color
+		int color = 2;
+		int maxIslandSize = 0;
+		for (int row = 0; row < grid.Length; ++row)
+			for (int col = 0; col < grid.Length; ++col)
+				if (grid[row][col] == ISLAND)
 				{
-					color2Size.Add(color, _PaintIsland(row, col, color, map));
+					islandSizeTable[color] = _CountIslandSize(row, col, color, grid);
+					maxIslandSize = Math.Max(maxIslandSize, islandSizeTable[color]);
 					++color;
 				}
-			}
+
+		// find the largest connected island size
+		for (int row = 0; row < grid.Length; ++row)
+			for (int col = 0; col < grid.Length; ++col)
+				if (grid[row][col] == WATER)
+					maxIslandSize = Math.Max(maxIslandSize, _GetConnectedIslandSize(row, col, grid, islandSizeTable));
+		return maxIslandSize;
+	}
+
+	private int _CountIslandSize(int row, int col, int color, int[][] grid)
+	{
+		grid[row][col] = color;
+
+		int islandSize = 1;
+		if (row-1 >= 0 && grid[row-1][col] == ISLAND)
+			islandSize += _CountIslandSize(row-1, col, color, grid);
+		if (col-1 >= 0 && grid[row][col-1] == ISLAND)
+			islandSize += _CountIslandSize(row, col-1, color, grid);
+		if (row+1 < grid.Length && grid[row+1][col] == ISLAND)
+			islandSize += _CountIslandSize(row+1, col, color, grid);
+		if (col+1 < grid.Length && grid[row][col+1] == ISLAND)
+			islandSize += _CountIslandSize(row, col+1, color, grid);
+
+		return islandSize;
+	}
+
+	private int _GetConnectedIslandSize(
+		int row, int col,
+		int[][] grid,
+		Dictionary<int, int> islandSizeTable)
+	{
+		var colorSet = new HashSet<int>();
 		
-		var maxSize = 0;
-		foreach (var size in color2Size.Values)
-			maxSize = Math.Max(maxSize, size);
-
-		for (int row = 0; row < map.Length; ++row)
-			for (int col = 0; col < map[row].Length; ++col)
-			{
-				if (map[row][col] == 0)
-					maxSize = Math.Max(
-						maxSize,
-						_CombineSize(row, col, map, color2Size));
-			}
-
-		return maxSize;
-	}
-
-	private int[][] _GetPaths(int row, int col, int[][] map)
-	{
-		var paths = new List<int[]>();
-		if (row - 1 >= 0)
-			paths.Add(new int[]{row-1, col});
-		if (col - 1 >= 0)
-			paths.Add(new int[]{row, col-1});
-		if (row + 1 < map.Length)
-			paths.Add(new int[]{row+1, col});
-		if (col + 1 < map[row].Length)
-			paths.Add(new int[]{row, col+1});
-		return paths.ToArray();
-	}
-
-	private int _PaintIsland(
-		int row, int col, int color,
-		int[][] map)
-	{
-		if (map[row][col] != 1) return 0;
-
-		map[row][col] = color;
-		var size = 1;
-		var paths = _GetPaths(row, col, map);
-		foreach (var path in paths)
+		int size = 1;
+		if (row-1 >= 0 && grid[row-1][col] != WATER)
+			colorSet.Add(grid[row-1][col]);
+		if (col-1 >= 0 && grid[row][col-1] != WATER)
+			colorSet.Add(grid[row][col-1]);
+		if (row+1 < grid.Length && grid[row+1][col] != WATER)
+			colorSet.Add(grid[row+1][col]);
+		if (col+1 < grid.Length && grid[row][col+1] != WATER)
+			colorSet.Add(grid[row][col+1]);
+		
+		foreach (var color in colorSet)
 		{
-			var i = path[0];
-			var j = path[1];
-			size += _PaintIsland(i, j, color, map);
-		}
-		return size;
-	}
-
-	private int _CombineSize(int row, int col, int[][] map, Dictionary<int, int> color2Size)
-	{
-		if (map[row][col] != 0) return 0;
-
-		var size = 1;
-		var paths = _GetPaths(row, col, map);
-		var colorCache = new HashSet<int>();
-		foreach (var path in paths)
-		{
-			var i = path[0];
-			var j = path[1];
-			var color = map[i][j];
-			if (color != 0 && !colorCache.Contains(color))
-			{
-				colorCache.Add(color);
-				size += color2Size[color];
-			}
+			size += islandSizeTable[color];
 		}
 		return size;
 	}
