@@ -7,43 +7,26 @@ using System.Collections.Generic;
 
 
 public class ContiguousArray {
-	private class Mapping {
-		private Dictionary<int, int> _dic = new Dictionary<int, int>();
-
-		public bool TryMap(int diffLen, out int index) {
-			if (!_dic.ContainsKey(diffLen)) {
-				index = int.MinValue;
-				return false;
-			}
-
-			index = _dic[diffLen];
-			return true;
-		}
-
-		public bool Add(int diffLen, int index) {
-			_dic[diffLen] = index;
-			return true;
-		}
-	}
     public int FindMaxLength(int[] nums) {
-    	if (nums == null || nums.Length == 0) return 0;
+		var maxLength = 0;
+		var currentIndex = -1;
+		var sum = 0;
 
-		Mapping dic = new Mapping();
-		dic.Add(0, -1);
+		var startIndexDic = new Dictionary<int, int>();
+		startIndexDic[sum] = currentIndex;
+		++currentIndex;
 
-		var maxLen = 0;
-		var diffLen = 0;
-		for (int i = 0; i < nums.Length; ++i) {
-			diffLen += (nums[i] == 0)? 1 : -1;
+		for (;currentIndex < nums.Length; ++currentIndex)
+		{
+			if (nums[currentIndex] == 1) ++sum;
+			else --sum;
 
-			var index = 0;
-			if (dic.TryMap(diffLen, out index)) {
-				maxLen = Math.Max(i - index, maxLen);
-			} else {
-				dic.Add(diffLen, i);
-			}
+			if (startIndexDic.ContainsKey(sum))
+				maxLength = Math.Max(maxLength, currentIndex - startIndexDic[sum]);
+			else
+				startIndexDic[sum] = currentIndex;
 		}
 
-		return maxLen;
+		return maxLength;
     }
 }
