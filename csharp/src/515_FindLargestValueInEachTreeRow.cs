@@ -20,26 +20,23 @@ namespace LeetCode.Problem_515
 
 	public class FindLargestValueInEachTreeRow {
 		public IList<int> LargestValues(TreeNode root) {
-			if (root == null) return new List<int>();
-
 			var list = new List<int>();
-			var row = new List<TreeNode>();
-			row.Add(root);
+			if (root == null) return list;
 
-			while (row.Count > 0) {
-				var max = row.Select(node => node.val).Max();
-				list.Add(max);
+			var queue = new Queue<TreeNode>();
+			queue.Enqueue(root);
 
-				var nextRow = new List<TreeNode>();
-				foreach (var node in row)
+			while (queue.Count > 0)
+			{
+				var maxVal = queue.Max(node => node.val);
+				list.Add(maxVal);
+
+				for (int count = queue.Count; count > 0; --count)
 				{
-					if (node.left != null)
-						nextRow.Add(node.left);
-					if (node.right != null)
-						nextRow.Add(node.right);
+					var node = queue.Dequeue();
+					if (node.left != null) queue.Enqueue(node.left);
+					if (node.right != null) queue.Enqueue(node.right);
 				}
-				row.Clear();
-				row.AddRange(nextRow);
 			}
 
 			return list;

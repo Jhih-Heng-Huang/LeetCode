@@ -6,6 +6,8 @@ add_library(518_CoinChange2 SHARED 518_CoinChange2.cs)
 add_library(886_PossibleBipartition SHARED 886_PossibleBipartition.cs)
 add_library(1277_CountSquareSubmatriceswithAllOnes SHARED 1277_CountSquareSubmatriceswithAllOnes.cs)
 add_library(515_FindLargestValueInEachTreeRow SHARED 515_FindLargestValueInEachTreeRow.cs)
+set_target_properties(515_FindLargestValueInEachTreeRow PROPERTIES VS_DOTNET_REFERENCES "System")
+
 add_library(106_ConstructBinaryTreeFromInorderAndPostorderTraversal SHARED 106_ConstructBinaryTreeFromInorderAndPostorderTraversal.cs)
 add_library(827_MakingALargeIsland SHARED 827_MakingALargeIsland.cs)
 add_library(1_TwoSum SHARED 1_TwoSum.cs)
