@@ -18,12 +18,22 @@ namespace LeetCode.Problem_1008
 		}
 
 		public TreeNode BstFromPreorder(int[] preorder) {
-			if (preorder == null || preorder.Length == 0) return null;
+			return _BuildTree(preorder, 0, preorder.Length-1);
+		}
 
-			var node = new TreeNode();
-			node.val = preorder.First();
-			node.left = BstFromPreorder(preorder.Where(v => v < node.val).ToArray());
-			node.right = BstFromPreorder(preorder.Where(v => v > node.val).ToArray());
+		private TreeNode _BuildTree(int[] preorder, int left, int right)
+		{
+			if (left > right) return null;
+
+			var val = preorder[left];
+			var node = new TreeNode(val);
+
+			var index = left;
+			for (; index <= right; ++index)
+				if (preorder[index] > val) break;
+			
+			node.left = _BuildTree(preorder, left+1, index-1);
+			node.right = _BuildTree(preorder, index, right);
 			return node;
 		}
 	}
