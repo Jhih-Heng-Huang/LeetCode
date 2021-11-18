@@ -8,49 +8,56 @@ public class Leet638ShoppingOffers
 {
 	public int ShoppingOffers(IList<int> price, IList<IList<int>> special, IList<int> needs)
 	{
-		if (price == null || price.Count == 0 ||
-			needs == null || needs.Count == 0)
-			return 0;
-		
-		var needs2Price = new Dictionary<string, int>();
-		return _GetMinPrice(price, special, needs, needs2Price);
+		var minPriceDic = new Dictionary<string, int>();
+		return _ShoppingOffers(price, special, needs, minPriceDic);
 	}
 
-	private int _GetMinPrice(
-		IList<int> price, IList<IList<int>> special,
-		IList<int> needs, Dictionary<string, int> needs2Price)
+	private int _ShoppingOffers(IList<int> price, IList<IList<int>> special, IList<int> needs, Dictionary<string,int> minPriceDic)
 	{
+		if (needs.All(need => need == 0)) return 0;
+
 		var key = _ToKey(needs);
-		if (needs2Price.ContainsKey(key))
-			return needs2Price[key];
-		
+		if (minPriceDic.ContainsKey(key)) return minPriceDic[key];
+
 		var minPrice = 0;
 		for (int i = 0; i < needs.Count; ++i)
-			minPrice += price[i] * needs[i];
+			minPrice += needs[i] * price[i];
 
 		foreach (var sp in special)
 		{
-			var restNeeds = new List<int>();
-			for (int i = 0; i < needs.Count; ++i)
-				restNeeds.Add(needs[i] - sp[i]);
-
-			if (restNeeds.Any(n => n < 0))
+			if (!_IsSpecialPriceMeetNeeds(sp, needs))
 				continue;
-
-			var newPrice = sp.Last() +
-				_GetMinPrice(price, special, restNeeds, needs2Price);
-			minPrice = Math.Min(minPrice, newPrice);
+			
+			var localPrice = sp.Last();
+			for (int i = 0; i < needs.Count; ++i)
+				needs[i] -= sp[i];
+			localPrice += _ShoppingOffers(price, special, needs, minPriceDic);
+			for (int i = 0; i < needs.Count; ++i)
+				needs[i] += sp[i];
+			minPrice = Math.Min(minPrice, localPrice);
 		}
 
-		needs2Price[key] = minPrice;
+		minPriceDic[key] = minPrice;
 		return minPrice;
+	}
+
+	private bool _IsSpecialPriceMeetNeeds(IList<int> special, IList<int> needs)
+	{
+		var meetNeeds = true;
+		for (int i = 0; i < needs.Count; ++i)
+			if (needs[i] < special[i])
+			{
+				meetNeeds = false;
+				break;
+			}
+		return meetNeeds;
 	}
 
 	private string _ToKey(IList<int> needs)
 	{
-		string key = string.Empty;
+		var key = string.Empty;
 		foreach (var need in needs)
-			key += string.Format("{0},", need);
+			key += need.ToString() + ",";
 		return key;
 	}
 }
