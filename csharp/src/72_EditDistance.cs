@@ -2,6 +2,7 @@
 LeetCode 72. Edit Distance
 */
 
+using System;
 using System.Linq;
 
 namespace LeetCode.Problem_72
@@ -10,16 +11,27 @@ namespace LeetCode.Problem_72
 		private const int NAN = -1;
 		public int MinDistance(string word1, string word2)
 		{
-			if (word1.Length == 0) return word2.Length;
-			if (word2.Length == 0) return word1.Length;
-
 			var table = _GenTable(word1.Length, word2.Length);
-			return _FindMinDistance(
-				word1,
-				word2,
-				word1.Length,
-				word2.Length,
-				table);
+
+			for (int len1 = 1; len1 <= word1.Length; ++len1)
+				for (int len2 = 1; len2 <= word2.Length; ++len2)
+				{
+					var val1 = word1[len1-1];
+					var val2 = word2[len2-1];
+
+					
+					table[len1][len2] = (val1 == val2)?
+						table[len1-1][len2-1] :
+						1 + Math.Min(
+							table[len1-1][len2],
+							Math.Min(
+								table[len1][len2-1],
+								table[len1-1][len2-1]
+							)
+						);
+				}
+
+			return table[word1.Length][word2.Length];
 		}
 
 		private int[][] _GenTable(
@@ -39,31 +51,6 @@ namespace LeetCode.Problem_72
 			for (int col = 0; col < table[0].Length; ++col)
 				table[0][col] = col;
 			return table;
-		}
-
-		private int _FindMinDistance(
-			string str1,
-			string str2,
-			int str1Length,
-			int str2Length,
-			int[][] table)
-		{
-			if (table[str1Length][str2Length] != NAN)
-				return table[str1Length][str2Length];
-
-			var word1 = str1[str1Length-1];
-			var word2 = str2[str2Length-1];
-
-			if (word1 == word2)
-				table[str1Length][str2Length] = _FindMinDistance(str1, str2, str1Length-1, str2Length-1, table);
-			else
-				table[str1Length][str2Length] = new int[]
-				{
-					1 + _FindMinDistance(str1, str2, str1Length-1, str2Length, table),
-					1 + _FindMinDistance(str1, str2, str1Length, str2Length-1, table),
-					1 + _FindMinDistance(str1, str2, str1Length-1, str2Length-1, table),
-				}.Min();
-			return table[str1Length][str2Length];
 		}
 	}
 }
