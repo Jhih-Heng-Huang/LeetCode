@@ -11,40 +11,38 @@ namespace LeetCode.Problem_983
 	{
 		private class Ticket
 		{
-			public int Cost;
 			public int Period;
+			public int Cost;
 		}
-
 		public int MincostTickets(int[] days, int[] costs)
 		{
-			if (days == null || days.Length == 0)
-				return 0;
-			
 			var tickets = _GenTickets(costs);
-			return _GetMinCost(days, tickets);
+			return _FindMinCost(days, tickets);
 		}
 
 		private Ticket[] _GenTickets(int[] costs)
-			=> new Ticket[]
+		{
+			return new Ticket[]
 			{
 				new Ticket
 				{
-					Cost = costs[0],
 					Period = 1,
+					Cost = costs[0],
 				},
 				new Ticket
 				{
-					Cost = costs[1],
 					Period = 7,
+					Cost = costs[1],
 				},
 				new Ticket
 				{
-					Cost = costs[2],
 					Period = 30,
+					Cost = costs[2],
 				},
 			};
+		}
 
-		private int _GetMinCost(int[] days, Ticket[] tickets)
+		private int _FindMinCost(int[] days, Ticket[] tickets)
 		{
 			var table = new int[days.Length];
 
@@ -55,7 +53,7 @@ namespace LeetCode.Problem_983
 				{
 					var cost = ticket.Cost;
 					for (int j = i-1; j >= 0; --j)
-						if (days[j] <= days[i] - ticket.Period)
+						if (days[i] - days[j] >= ticket.Period)
 						{
 							cost += table[j];
 							break;
@@ -64,7 +62,6 @@ namespace LeetCode.Problem_983
 				}
 				table[i] = minCost;
 			}
-
 			return table.Last();
 		}
 	}
