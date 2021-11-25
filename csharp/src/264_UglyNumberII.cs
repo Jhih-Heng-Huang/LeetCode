@@ -9,53 +9,43 @@ namespace LeetCode.Problem_264
 	{
 		private class PrimePointer
 		{
-			public int Value;
-			public int Position;
+			public int Val;
+			public int Pos;
 		}
-
 		public int NthUglyNumber(int n)
 		{
-			if (n <= 1) return 1;
-
-			var primePointers = _GenPrimePointers();
+			var primes = new PrimePointer[]
+			{
+				new PrimePointer
+				{
+					Val = 2,
+					Pos = 0,
+				},
+				new PrimePointer
+				{
+					Val = 3,
+					Pos = 0,
+				},
+				new PrimePointer
+				{
+					Val = 5,
+					Pos = 0,
+				},
+			};
 
 			var table = new int[n];
 			table[0] = 1;
 			for (int i = 1; i < table.Length; ++i)
 			{
-				var min = int.MaxValue;
-				foreach (var primePointer in primePointers)
-					min = Math.Min(min, primePointer.Value * table[primePointer.Position]);
-				table[i] = min;
-
-				foreach (var primePointer in primePointers)
-					if (primePointer.Value * table[primePointer.Position] == min)
-						++primePointer.Position;
+				var minVal = int.MaxValue;
+				foreach (var prime in primes)
+					minVal = Math.Min(minVal, prime.Val * table[prime.Pos]);
+				foreach (var prime in primes)
+					if (minVal == prime.Val * table[prime.Pos])
+						++prime.Pos;
+				table[i] = minVal;
 			}
-
 			return table[n-1];
-		}
-
-		private PrimePointer[] _GenPrimePointers()
-		{
-			return new PrimePointer[]
-			{
-				new PrimePointer
-				{
-					Value = 2,
-					Position = 0,
-				},
-				new PrimePointer
-				{
-					Value = 3,
-					Position = 0,
-				},
-				new PrimePointer
-				{
-					Value = 5,
-					Position = 0,
-				},
-			};
 		}
 	}
 }
