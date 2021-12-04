@@ -10,51 +10,30 @@ namespace LeetCode.Problem_56
 {
 	public class LeetCode56MergeIntervals
 	{
-		private class Interval
-		{
-			public int left;
-			public int right;
-		}
-
+		private const int LEFT = 0;
+		private const int RIGHT = 1;
 		public int[][] Merge(int[][] intervals)
 		{
-			if (intervals == null || intervals.Length == 0)
-				return new int[0][];
-			
-			return _Merge(intervals
-				.OrderBy(interval => interval[0])
-				.Select(interval => new Interval
-				{
-					left = interval[0],
-					right = interval[1],
-				})
-				.ToArray());
-		}
+			intervals = intervals.OrderBy(interval => interval[LEFT]).ToArray();
 
-		private int[][] _Merge(Interval[] intervals)
-		{
 			var list = new List<int[]>();
-
-			Interval lastInterval = new Interval
+			list.Add(intervals[0]);
+			for (int i = 1; i < intervals.Length; ++i)
 			{
-				left = intervals[0].left,
-				right = intervals[0].right,
-			};
-
-			foreach (var interval in intervals)
-			{
-				if (lastInterval.right >= interval.left)
-					lastInterval.right = Math.Max(lastInterval.right, interval.right);
-				else
+				if (!_IsIntersect(list.Last(), intervals[i]))
 				{
-					list.Add(new int[]{ lastInterval.left, lastInterval.right});
-					lastInterval.left = interval.left;
-					lastInterval.right = interval.right;
+					list.Add(intervals[i]);
+					continue;
 				}
-			}
-			list.Add(new int[] {lastInterval.left, lastInterval.right});
 
+				list.Last()[RIGHT] = Math.Max(list.Last()[RIGHT], intervals[i][RIGHT]);
+			}
+			
 			return list.ToArray();
+		}
+		private bool _IsIntersect(int[] interval1, int[] interval2)
+		{
+			return interval1[RIGHT] >= interval2[LEFT];
 		}
 	}
 }
