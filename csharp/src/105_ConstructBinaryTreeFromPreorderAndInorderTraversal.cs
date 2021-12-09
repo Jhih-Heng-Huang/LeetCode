@@ -17,46 +17,43 @@ namespace LeetCode.Problem_105
 
 		public TreeNode BuildTree(int[] preorder, int[] inorder)
 		{
-			if (preorder == null || preorder.Length == 0 ||
-				inorder == null || inorder.Length == 0)
-				return null;
 			return _BuildTree(
-				preorder, 0, preorder.Length - 1,
-				inorder, 0, inorder.Length - 1);
+				preorder, 0, preorder.Length-1,
+				inorder, 0, inorder.Length-1);
 		}
 
 		private TreeNode _BuildTree(
-			int[] preorder, int leftPreorder, int rightPreorder,
-			int[] inorder, int leftInorder, int rightInorder)
+			int[] preorder, int headPreorder, int tailPreorder,
+			int[] inorder, int headInorder, int tailInorder)
 		{
-			if (leftPreorder > rightPreorder ||
-				leftInorder > rightInorder)
-				return null;
+			if (headPreorder > tailPreorder) return null;
 
 			var node = new TreeNode();
-			node.val = preorder[leftPreorder];
-			if (leftPreorder == rightPreorder ||
-				leftInorder == rightInorder)
-				return node;
+			node.val = preorder[headPreorder];
 
-			var index = _FindIndex(node.val, inorder, leftInorder, rightInorder);
-			var len = index - leftInorder;
+			var index = _FindIndexOf(inorder, headInorder, tailInorder, node.val);
+			var len = index - headInorder;
+
 			node.left = _BuildTree(
-				preorder, leftPreorder+1, leftPreorder + len,
-				inorder, leftInorder, index-1);
-			node.right = _BuildTree(preorder, leftPreorder + len + 1, rightPreorder,
-				inorder, index+1, rightInorder);
+				preorder, headPreorder + 1, headPreorder + len,
+				inorder, headInorder, index - 1
+			);
+			node.right = _BuildTree(
+				preorder, headPreorder + len + 1, tailPreorder,
+				inorder, index + 1, tailInorder
+			);
+
+			
 			return node;
 		}
 
-		private int _FindIndex(int value, int[] list, int left, int right)
+		private int _FindIndexOf(int[] list, int head, int tail, int val)
 		{
-			if (left > right) return -1;
-
-			for (int i = left; i <= right; ++i)
-				if (list[i] == value) return i;
-
+			for (int i = head; i <= tail; ++i)
+				if (list[i] == val)
+					return i;
 			return -1;
 		}
+
 	}
 }
