@@ -1,79 +1,71 @@
 /*
 LeetCode: 468. Validate IP Address
 */
+using System;
 
 namespace LeetCode.Problem_468
 {    
 	public class ValidateIPAddress {
 		public string ValidIPAddress(string IP)
 		{
-			if (_IsIPV4(IP)) return "IPv4";
-			if (_IsIPV6(IP)) return "IPv6";
+			if (string.IsNullOrEmpty(IP)) return "Neither";
+			if (_IsIPv4(IP)) return "IPv4";
+			if (_IsIPv6(IP)) return "IPv6";
 			return "Neither";
 		}
 
-		private bool _IsIPV4(string ip)
+		private bool _IsIPv4(string ip)
 		{
-			if (string.IsNullOrEmpty(ip))
-				return false;
-			
-			var values = ip.Split('.');
+			var vals = ip.Split('.');
 
-			if (values.Length != 4) return false;
+			if (vals.Length != 4) return false;
 
-			foreach (var value in values)
-				if (!_IsValidIPV4Value(value))
+			foreach (var val in vals)
+				if (!_IsValidIPv4Value(val))
 					return false;
-			return true;
-		}
-
-		private bool _IsValidIPV4Value(string value)
-		{
-			if (string.IsNullOrEmpty(value)) return false;
-			if (value.Length < 1 || value.Length > 3)
-				return false;
-			if (value[0] == '0' && value.Length > 1)
-				return false;
-
-			int result = 0;
-			if (!int.TryParse(value, out result))
-				return false;
-			if (result < 0 || result > 255)
-				return false;
 
 			return true;
 		}
-
-		private bool _IsIPV6(string ip)
+		private bool _IsIPv6(string ip)
 		{
-			if (string.IsNullOrEmpty(ip))
-				return false;
-			
-			var values = ip.Split(':');
+			var vals = ip.Split(':');
+			if (vals.Length != 8) return false;
 
-			if (values.Length != 8) return false;
-
-			foreach (var value in values)
-				if (!_IsValidIPV6Value(value))
+			foreach (var val in vals)
+				if (!_IsValidIPv6Value(val))
 					return false;
 
 			return true;
 		}
 
-		private bool _IsValidIPV6Value(string value)
+		private bool _IsValidIPv4Value(string str)
 		{
-			if (string.IsNullOrEmpty(value))
-				return false;
-			
-			if (value.Length < 1 || value.Length > 4)
-				return false;
-			
-			foreach (var c in value)
-				if (!char.IsDigit(c) &&
-					!('a' <= c && c <= 'f') &&
-					!('A' <= c && c <= 'F'))
+			foreach (var c in str)
+				if (!char.IsDigit(c)) return false;
+
+			if (str.Length == 0 || str.Length > 3) return false;
+			if (str.Length > 1 && str[0] == '0') return false;
+
+			var val = int.Parse(str);
+			if (val < 0 || val > 255) return false;
+			return true;
+		}
+
+		private bool _IsValidIPv6Value(string str)
+		{
+			if (str.Length == 0 || str.Length > 4) 	return false;
+			foreach (var c in str)
+				if (!_IsHexDigit(c))
 					return false;
 			return true;
+		}
+
+		private bool _IsHexDigit(char c)
+		{
+			return
+				('A' <= c && c <= 'F') ||
+				('a' <= c && c <= 'f') ||
+				char.IsDigit(c);
 		}
 	}
 
