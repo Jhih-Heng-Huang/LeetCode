@@ -7,40 +7,37 @@ using System;
 namespace LeetCode.Problem_787
 {
 	public class CheapestFlightsWithinKStops {
+		private const int FROM = 0;
+		private const int TO = 1;
+		private const int PRICE = 2;
 		public int FindCheapestPrice(int n, int[][] flights, int src, int dst, int K) {
-			if (n <= 0 || flights == null ||
-				flights.Length == 0)
-				return -1;
-			if (src == dst) return 0;
+			var table = GenTable_(n);
+			table[src] = 0;
 
-			var table = _GenTable(n, src);
-			for (int count = 0; count < K + 1; ++count)
+			for (int count = 0; count <= K; ++count)
 			{
-				var newTable = (int[])table.Clone();
+				var tempTable = (int[])table.Clone();
 				foreach (var flight in flights)
 				{
-					var from = flight[0];
-					var to = flight[1];
-					var price = flight[2];
+					var from = flight[FROM];
+					if (table[from] == int.MaxValue)
+						continue;
+					
+					var to = flight[TO];
+					var price = flight[PRICE];
 
-					if (table[from] == -1) continue;
-
-					var len = newTable[to];
-					newTable[to] = (len == -1)?
-						table[from] + price :
-						Math.Min(newTable[to], table[from] + price);
+					tempTable[to] = Math.Min(tempTable[to], table[from] + price);
 				}
-				table = newTable;
+				table = tempTable;
 			}
-			return table[dst];
+			return table[dst] == int.MaxValue? -1: table[dst];
 		}
 
-		private int[] _GenTable(int n, int src)
+		private int[] GenTable_(int numPlaces)
 		{
-			var table = new int[n];
+			var table = new int[numPlaces];
 			for (int i = 0; i < table.Length; ++i)
-				table[i] = -1;
-			table[src] = 0;
+				table[i] = int.MaxValue;
 			return table;
 		}
 	}
