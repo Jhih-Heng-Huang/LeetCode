@@ -6,95 +6,92 @@ namespace LeetCode.Problem_146
 	public class LRUCache {
 		private class Node
 		{
-			public int Key;
-			public int Value;
-			public Node Previous = null;
-			public Node Next = null;
+			public int key;
+			public int value;
+			public Node previous = null;
+			public Node next = null;
 		}
-
-		private Dictionary<int, Node> _cache = new Dictionary<int, Node>();
 		private int _capacity;
-		private Node _head;
-		private Node _tail;
-		public LRUCache(int capacity) {
-			_capacity = capacity;
+		private Node _head = null;
+		private Node _tail = null;
+		private Dictionary<int, Node> _dic = new Dictionary<int, Node>();
 
+		public LRUCache(int capacity)
+		{
+			_capacity = capacity;
 			_head = new Node();
 			_tail = new Node();
-
-			_head.Next = _tail;
-			_tail.Previous = _head;
+			_head.next = _tail;
+			_tail.previous = _head;
 		}
 
-		public int Get(int key) {
-			if (!_cache.ContainsKey(key))
-				return -1;
-			var node = _cache[key];
-			_Extract(node);
-			_PutOnTail(node);
-			return node.Value;
+		public int Get(int key)
+		{
+			if (!_dic.ContainsKey(key)) return -1;
+
+			_MoveToHead(_dic[key]);
+			return _dic[key].value;
 		}
 		
-		public void Put(int key, int value) {
-			Node node = null;
-			if (_cache.ContainsKey(key))
+		public void Put(int key, int value)
+		{
+			if (_dic.ContainsKey(key))
 			{
-				node = _cache[key];
-				node.Value = value;
-				_Extract(node);
-				_PutOnTail(node);
+				_dic[key].value = value;
+				_MoveToHead(_dic[key]);
 				return;
 			}
 
-			node = new Node()
-			{
-				Key = key,
-				Value = value,
-			};
-			_PutOnTail(node);
-			_cache[key] = node;
+			_PutOnList(key, value);
+		}
 
-			if (_cache.Count == 0 ||
-				_cache.Count <= _capacity)
-				return;
+		private void _MoveToHead(Node node)
+		{
+			_Remove(node);
+			_AddToHead(node);
+		}
+
+		private void _PutOnList(int key, int value)
+		{
+			if (_dic.Keys.Count == _capacity)
+				_PopLast();
+
+			var node = new Node();
+			node.key = key;
+			node.value = value;
+
+			_dic.Add(key, node);
+			_AddToHead(node);
+		}
+
+		private void _AddToHead(Node node)
+		{
+			var previousNode = _head;
+			var nextNode = _head.next;
+
+			node.previous = previousNode;
+			node.next = nextNode;
 			
-			var head = _PopHead();
-			if (head == null) return;
-			_cache.Remove(head.Key);
+			previousNode.next = node;
+			nextNode.previous = node;
 		}
 
-		private void _Extract(Node node)
+		private void _PopLast()
 		{
-			var previous = node.Previous;
-			var next = node.Next;
-
-			previous.Next = next;
-			next.Previous = previous;
-
-			node.Previous = null;
-			node.Next = null;
+			var last = _tail.previous;
+			_dic.Remove(last.key);
+			_Remove(last);
 		}
 
-		private void _PutOnTail(Node node)
+		private void _Remove(Node node)
 		{
-			var previous = _tail.Previous;
-			var next = _tail;
+			var previousNode = node.previous;
+			var nextNode = node.next;
+			node.previous = null;
+			node.next = null;
 
-			node.Previous = previous;
-			node.Next = next;
-
-			previous.Next = node;
-			next.Previous = node;
-		}
-
-		private Node _PopHead()
-		{
-			if (_head.Next == _tail)
-				return null;
-			
-			var node = _head.Next;
-			_Extract(node);
-			return node;
+			previousNode.next = nextNode;
+			nextNode.previous = previousNode;
 		}
 	}
 }
