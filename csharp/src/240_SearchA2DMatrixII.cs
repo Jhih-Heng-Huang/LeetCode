@@ -8,16 +8,16 @@ namespace LeetCode.Problem_240
 	{
 		public bool SearchMatrix(int[][] matrix, int target)
 		{
-			if (matrix == null) return false;
-
 			var row = 0;
-			var col = matrix[row].Length - 1;
-			while (row < matrix.Length && col >= 0)
+			var col = matrix[0].Length - 1;
+			while (col >= 0 && row < matrix.Length)
 			{
-				var value = matrix[row][col];
-				if (target == value) return true;
-				else if (target < value) --col;
-				else ++row;
+				if (matrix[row][col] == target)
+					return true;
+				if (matrix[row][col] > target)
+					--col;
+				else
+					++row;
 			}
 			return false;
 		}
