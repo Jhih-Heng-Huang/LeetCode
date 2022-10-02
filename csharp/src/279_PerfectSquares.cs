@@ -7,21 +7,32 @@ namespace LeetCode.Problem_279 {
 		public int NumSquares(int n) {
 			if (n < 1) return 0;
 
-			var table = new int[n+1];
-			table[0] = 0;
-
-			for (int i = 1; i < table.Length; ++i)
-				table[i] = _GetMinNumSquares(i, table);
-
-			return table[n];
+			var list = _InitList(n);
+			
+			for (int i = 1; i < list.Length; ++i)
+			{
+				list[i] = _FindMinSquareNum(i, list);
+			}
+			return list[n];
 		}
 
-		private int _GetMinNumSquares(int num, int[] table)
+		private static int[] _InitList(int num)
 		{
-			var min = int.MaxValue;
-			for (int val = 1; num >= val * val; ++val)
-				min = Math.Min(min, 1 + table[num - val * val]);
-			return min;
+			var list = new int[num+1];
+			list[0] = 0;
+			return list;
+		}
+
+		private static int _FindMinSquareNum(int i, int[] list)
+		{
+			var sqrtI = Math.Sqrt(i);
+			int minNum = int.MaxValue;
+			for (int v = 1; v <= sqrtI; ++v)
+			{
+				if ((i - v * v) < 0) break;
+				minNum = Math.Min(minNum, list[i - v * v] + 1);
+			}
+			return minNum;
 		}
 	}
 }
