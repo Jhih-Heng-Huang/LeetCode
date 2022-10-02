@@ -17,16 +17,19 @@ namespace LeetCode.Problem_141
 	{
 		public bool HasCycle(ListNode head) {
 			if (head == null || head.next == null) return false;
+
 			var slow = head;
-			var fast = head.next;
-			while (fast != slow)
+			var fast = head;
+
+			while (true)
 			{
-				slow = slow.next;
-				if (fast.next == null || fast.next.next == null)
-					return false;
+				if (fast.next == null || fast.next.next == null) return false;
+				else if (fast.next == slow || fast.next.next == slow) return true;
 				fast = fast.next.next;
+				slow = slow.next;
 			}
-			return true;
+
+			return false;
 		}
 	}
 }
