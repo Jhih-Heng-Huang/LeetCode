@@ -11,22 +11,21 @@ namespace LeetCode.Problem_22
 		public IList<string> GenerateParenthesis(int n)
 		{
 			var results = new List<string>();
-			_GenParenthesis(results, string.Empty, n, 0);
+			_GenerateParenthesis(n, 0, string.Empty, results);
 			return results;
 		}
 
-		private void _GenParenthesis(IList<string> results, string result, int leftCount, int rightCount)
+		private void _GenerateParenthesis(int left, int right, string result, IList<string> results)
 		{
-			if (leftCount == 0 && rightCount == 0)
-			{
+			if (left == 0) {
+				for (int count = 0; count < right; ++count)
+					result += ')';
 				results.Add(result);
 				return;
 			}
 
-			if (leftCount > 0)
-				_GenParenthesis(results, result + '(', leftCount - 1, rightCount + 1);
-			if (rightCount > 0)
-				_GenParenthesis(results, result + ')', leftCount, rightCount - 1);
+			if (left > 0) _GenerateParenthesis(left-1, right+1, result + '(', results);
+			if (right > 0) _GenerateParenthesis(left, right-1, result + ')', results);
 		}
 	}
 }
