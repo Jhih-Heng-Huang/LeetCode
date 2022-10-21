@@ -9,24 +9,33 @@ namespace LeetCode.Problem_20
 	public class Solution {
 		public bool IsValid(string s)
 		{
+			if (string.IsNullOrEmpty(s)) return true;
+
 			var stack = new Stack<char>();
-			foreach (var p in s)
-			{
-				if (_IsLeft(p))
-					stack.Push(p);
-				else if (stack.Count > 0 && _IsPair(stack.Peek(), p))
-					stack.Pop();
-				else return false;
+			foreach(var c in s) {
+				if (_IsLeft(c)) {
+					stack.Push(c);
+					continue;
+				}
+				
+				if (stack.Count == 0) return false;
+
+				var left = stack.Pop();
+				
+				if (!_IsPair(left, c)) return false;
 			}
-			return stack.Count == 0;
+
+			if (stack.Count > 0) return false;
+			return true;
 		}
 
-		private bool _IsLeft(char left)
-		=> left == '(' || left == '[' || left == '{';
+		private bool _IsLeft(char c)
+		=> (c == '(') || (c == '[') || (c == '{');
 
 		private bool _IsPair(char left, char right)
 		=> (left == '(' && right == ')') ||
-			(left == '[' && right == ']') ||
-			(left == '{' && right == '}');
+		(left == '[' && right == ']') ||
+		(left == '{' && right == '}');
+
 	}
 }
