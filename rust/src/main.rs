@@ -1,4 +1,4 @@
-mod LeetCode;
+mod leet_code;
 
 fn main() {
 	println!("Hello, world!");
