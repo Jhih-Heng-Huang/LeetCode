@@ -1,58 +1,57 @@
 // 909. Snakes and Ladders
 
-use std::{cmp::min, collections::VecDeque};
+use std::collections::VecDeque;
 
 struct Solution;
 
 impl Solution {
 	pub fn snakes_and_ladders(board: Vec<Vec<i32>>) -> i32 {
-		let board_size = board.len() * board.len();
-	
-		// gen table
-		let none = -1;
-		let mut table = vec![none; board_size + 1];
-	
-		table[1] = 0;
+		#[derive(Clone)]
+		struct Data {
+			step_nums: i32,
+			next_pos: usize,
+		}
 
-	
-		// run dp & bfs
+		// gen table
+		let board_size = board.len() * board.len();
+		let none = -1;
+		let mut list = vec![Data{step_nums: none, next_pos: 0};board_size + 1];
+
+		for i in 1..board_size+1 {
+			let mut row = (i - 1) / board.len();
+			let mut col = match row % 2 {
+				0 => (i - 1) % board.len(),
+				_ => (board.len() - 1) - (i - 1) % board.len(),
+			};
+
+			row = (board.len() - 1) - row;
+
+			list[i].next_pos = match board[row][col] {
+				-1 => i,
+				value => value as usize,
+			};
+		}
+		list[1].step_nums = 0;
+
+		// run dp + bfs
 		let mut queue = VecDeque::<usize>::new();
 		queue.push_back(1);
-
 		while !queue.is_empty() {
-			let current_pos = queue.pop_front();
-
-			if current_pos.is_none() {break;}
+			let current = queue.pop_front().unwrap();
 
 			for step in 1..7 {
-				if current_pos.unwrap() + step > board_size {break;}
+				if current + step > board_size {break;}
 
-				let next_pos = Self::_get_position_from_board(current_pos.unwrap() + step, &board);
+				let next = list[current+step].next_pos;
 
-				if table[next_pos] != none {continue;}
+				if list[next].step_nums != none {continue;}
 
-				table[next_pos] = table[current_pos.unwrap()] + 1;
-				queue.push_back(next_pos);
+				list[next].step_nums = list[current].step_nums + 1;
+				
+				queue.push_back(next);
 			}
 		}
-	
-		return table[board_size];
-	}
 
-	fn _get_position_from_board(position: usize, board: &Vec<Vec<i32>>) -> usize {
-		let index = position - 1;
-		let mut first_index = index / board.len();
-		let mut second_index = index % board.len();
-
-		second_index = match first_index % 2 {
-			0 => second_index,
-			_ => board.len() - 1 - second_index,
-		};
-		first_index = board.len() - 1 - first_index;
-
-		return match board[first_index][second_index] {
-			-1 => position,
-			value => value as usize,
-		};
+		return list[board_size].step_nums;
 	}
 }
