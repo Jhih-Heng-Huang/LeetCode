@@ -1,8 +1,10 @@
 // 2359. Find Closest Node to Given Two Nodes
 
+#[allow(dead_code)]
 struct Solution;
 
 impl Solution {
+	#[allow(dead_code)]
 	pub fn closest_meeting_node(edges: Vec<i32>, node1: i32, node2: i32) -> i32 {
 		// gen table
 		let invalid_path_len = -1;

@@ -1,6 +1,8 @@
+#[allow(dead_code)]
 struct Solution;
 
 impl Solution {
+	#[allow(dead_code)]
 	pub fn valid_path(n: i32, edges: Vec<Vec<i32>>, source: i32, destination: i32) -> bool {
 		let neighbor_table = Self::_gen_neighbor_table(n, edges);
 		let mut visit_list = Self::_gen_visit_table(n);

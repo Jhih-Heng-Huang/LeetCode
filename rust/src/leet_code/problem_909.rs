@@ -2,9 +2,11 @@
 
 use std::collections::VecDeque;
 
+#[allow(dead_code)]
 struct Solution;
 
 impl Solution {
+	#[allow(dead_code)]
 	pub fn snakes_and_ladders(board: Vec<Vec<i32>>) -> i32 {
 		#[derive(Clone)]
 		struct Data {
@@ -19,7 +21,7 @@ impl Solution {
 
 		for i in 1..board_size+1 {
 			let mut row = (i - 1) / board.len();
-			let mut col = match row % 2 {
+			let col = match row % 2 {
 				0 => (i - 1) % board.len(),
 				_ => (board.len() - 1) - (i - 1) % board.len(),
 			};

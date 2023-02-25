@@ -1,9 +1,10 @@
 // 67. Add Binary
 
-
+#[allow(dead_code)]
 struct Solution;
 
 impl Solution {
+	#[allow(dead_code)]
 	pub fn add_binary(a: String, b: String) -> String {
 		let (first_part, carry) = Self::_add_first_part(&a, &b);
 		let last_part = Self::_add_last_part(Self::_extract_last_part(&a, &b), carry);
@@ -62,13 +63,13 @@ impl Solution {
 	}
 
 	fn _add_binary(left:char, right: char, carry: char) -> (char, char) {
-		let RADIX = 2;
-		let l_val = left.to_digit(RADIX).unwrap();
-		let r_val = right.to_digit(RADIX).unwrap();
-		let c_val = carry.to_digit(RADIX).unwrap();
+		let binary_radix = 2;
+		let l_val = left.to_digit(binary_radix).unwrap();
+		let r_val = right.to_digit(binary_radix).unwrap();
+		let c_val = carry.to_digit(binary_radix).unwrap();
 
-		let ret_sum = std::char::from_digit(l_val ^ r_val ^ c_val, RADIX).unwrap();
-		let ret_carry = std::char::from_digit((l_val & r_val) | (l_val & c_val) | (r_val & c_val) , RADIX).unwrap();
+		let ret_sum = std::char::from_digit(l_val ^ r_val ^ c_val, binary_radix).unwrap();
+		let ret_carry = std::char::from_digit((l_val & r_val) | (l_val & c_val) | (r_val & c_val) , binary_radix).unwrap();
 
 		print!("({},{}),", ret_sum, ret_carry);
 
