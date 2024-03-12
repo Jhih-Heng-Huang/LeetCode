@@ -31,7 +31,7 @@ impl Solution {
 				.map(|f| table[f.index] * f.val)
 				.min().unwrap();
 
-			for mut factor in factors.iter_mut() {
+			for factor in factors.iter_mut() {
 				if table[i] == table[factor.index] * factor.val {
 					factor.index += 1;
 				}
